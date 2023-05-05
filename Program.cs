@@ -1,5 +1,6 @@
 ﻿using System;              
 using System.Diagnostics;  // StopWatch + TimeSpan
+using System.Runtime.ConstrainedExecution;
 
 namespace Testing
 {
@@ -15,11 +16,13 @@ namespace Testing
             PopulateStationsDictionay();
 
             // start and finish stations
-            string startStation = string.Empty;
-            string endStation = string.Empty;
+            string startStation = "Vauxhall";
+            string endStation = "Paddington";
 
             // number of tests to run
-            int testCycles = 10;     
+            int testCycles = 10000;
+
+            BenchmarkResults benchmarkResults = new BenchmarkResults();
 
             // start the menu
             bool exit = false;
@@ -35,8 +38,8 @@ namespace Testing
                 Console.WriteLine();
                 Console.WriteLine("Please select an option:");
                 Console.WriteLine();
-                Console.WriteLine("1. Type in stations to walk between for consistency check");
-                Console.WriteLine("2. Choose number of tests iterations (1-100) for benchmarking");
+                Console.WriteLine("1. Input stations to walk between for CONSISTENCY check");
+                Console.WriteLine("2. Choose number of tests cycles (1-100,000) for BENCHMARKING");
                 Console.WriteLine("3. Run CONSISTENCY test");
                 Console.WriteLine("4. Run BENCHMARK test");
                 Console.WriteLine("5. Print results of tests");
@@ -46,7 +49,7 @@ namespace Testing
                 Console.WriteLine($"start:\t\t{startStation}\nend:\t\t{endStation}");
                 Console.WriteLine($"iterations: {testCycles}");
                 Console.WriteLine();
-                Console.Write("Enter your choice (1-4): ");
+                Console.Write("Enter your choice (1-6): ");
 
                 // read user selection
                 int selection;
@@ -82,7 +85,7 @@ namespace Testing
                             Console.WriteLine();
 
                             // returns a TestResult object array
-                            ConsistencyResults[] results = RunConsistencyTest(startStation, endStation);
+                            List<ConsistencyResults> resultsConsistency = RunConsistencyTest(startStation, endStation);
                         }
 
                         break;
@@ -104,12 +107,14 @@ namespace Testing
                             Console.WriteLine();
 
                             // returns a BenchmarkResult object array
-                            List<BenchmarkResults> results = RunBenchmarkTest(startStation, endStation, testCycles);
+                            benchmarkResults = RunBenchmarkTest(startStation, endStation, testCycles);
                         }
 
                         break;
                     case 5:
-                        // print results to go here
+                        Console.Clear();
+                        Console.WriteLine(benchmarkResults.GetBenchmarkTimes());
+                        
                         break;
                     case 6:
                         exit = true;
@@ -153,46 +158,53 @@ namespace Testing
             }   // end of CONSISTENCY test
 
             // function to return BENCHMARK result for different paths for each version
-            List<BenchmarkResults> RunBenchmarkTest(string startStation, string endStation, int testCount)
+            BenchmarkResults RunBenchmarkTest(string startStation, string endStation, int testCycles)
             {
+                BenchmarkResults results = new BenchmarkResults();
+
                 // create new stopwatches
-                Stopwatch timerV1 = new Stopwatch();
-                Stopwatch timerV2 = new Stopwatch();
-                Stopwatch timerV3 = new Stopwatch();
+                Stopwatch timer = new Stopwatch();
 
-                // create an list to contain the test results
-                List<BenchmarkResults> results = new List<BenchmarkResults>();
-
-                // create an instance of solution 1
+                // create an instance of solution 3
                 Version3 version3 = new Version3();
                 version3.GenerateAdjacencyList();
 
+                // create an list to contain the test results for the route test per version
+                List<float> result = new List<float>();
+
+                //////////////////////////////////////////////// will need to iterate through versions
+
+
                 // run the test the requested number of times
-                for (int i = 0; i < testCount; i++)
+                for (int i = 0; i < testCycles; i++)
                 {
                     // start the timer for V1
-                    timerV1.Start();
+                    timer.Start();
 
                     // run the algo with the start and finish stations
                     version3.CalcualteShortestPath(startStation, endStation);
 
                     // stop the timer for V1
-                    timerV1.Stop();
-
+                    timer.Stop();
                 }
 
-                // get the timespan
-                TimeSpan timeV1 = timerV1.Elapsed;
+                // get the timespan 
+                TimeSpan timeTaken = timer.Elapsed;
 
-                // result3.AddTiming
-                // string totalTimeString = String.Format("{0}", totalTime);
+                // get a float for the average per cycle
+                float averageT = (float)timeTaken.Milliseconds / (float)testCycles;
 
-                Console.WriteLine($"Route to test: {startStation} to {endStation}, {testCount} cycles");
+                // add time taken per cycle to list
+                result.Add(averageT);
+
+                Console.WriteLine($"Route to test: {startStation} to {endStation}, {testCycles} cycles");
                 Console.WriteLine($"=================================================================");
-                Console.WriteLine($"Version 3 execution time: {timeV1.Milliseconds} ms");
-                Console.WriteLine($"---------------------------------------------");
+                Console.WriteLine($"Version 3: execution time per cycle: {averageT} ms");
+                Console.WriteLine($"-----------------------------------------------------------------");
 
+                results.AddBenchmarkTime(startStation + "/" + endStation, result); 
 
+                // wait for key press
                 Console.ReadKey();
                 return results;
 
@@ -230,8 +242,8 @@ namespace Testing
             void InputNumberOfTests()
             {
                 int input = -1;
-                Console.WriteLine("Please enter an number between 1 and 1000: ");
-                if (int.TryParse(Console.ReadLine(), out input) & (input >= 1 && input <= 1000))
+                Console.WriteLine("Please enter an number between 1000 - 1000000: ");
+                if (int.TryParse(Console.ReadLine(), out input) & (input >= 1000 && input <= 1000000))
                 {
                     testCycles = input;
                 }

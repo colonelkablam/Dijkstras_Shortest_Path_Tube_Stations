@@ -6,26 +6,24 @@ namespace Testing
     public class BenchmarkResults
     {
         // a dictionary to store the benchmarking results from different routes
-        private Dictionary<string, List<List<double>>> timesPerRoute;
-        private string route;
+        private Dictionary<string, List<float>> benchmarkTimes;
 
         public BenchmarkResults()
         {
             // default results
-            timesPerRoute = new Dictionary<string, List<List<double>>>();
-            route = string.Empty;
+            benchmarkTimes = new Dictionary<string, List<float>>();
         }
 
-        // get station path
-        public Dictionary<string, List<List<double>>> GetTimes()
+        // get benchmarkTimes 
+        public Dictionary<string, List<float>> GetBenchmarkTimes()
         {
-            return timesPerRoute;
+            return benchmarkTimes;
         }
 
-        // get route 
-        public string GetRoute()
+        // add a benchmark time for a route 
+        public void AddBenchmarkTime(string route, List<float> times)
         {
-            return route;
+            benchmarkTimes.Add(route, times);
         }
     }
 }

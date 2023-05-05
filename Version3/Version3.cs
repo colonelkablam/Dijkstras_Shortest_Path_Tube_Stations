@@ -15,17 +15,12 @@ namespace Testing
 
         // Dictionary to hold all stations, names = keys, station = station
         private Dictionary<string, Station> stations;
-        private string startStationName, endStationName;
-        private string result;
 
 
         // constructor
         public Version3()
         {
             stations = new Dictionary<string, Station>();
-            startStationName = "no start inputted";
-            endStationName = "no end inputted";
-            result = "no path generated";
         }
 
         // generates the adjacency list 
@@ -164,7 +159,7 @@ namespace Testing
                     var neighbour = station.Neighbours.First(n => n.Item1 == previousStation);
 
                     /////// testing output
-                    pathString.Append($"{previousStation.Name} to {station.Name} -> {neighbour.Item3}mins\n"); 
+                    pathString.Append($"{previousStation.Name}  ->  {station.Name}  ({neighbour.Item3}mins)\n"); 
                     
                     totalTime += neighbour.Item3;
                 }
