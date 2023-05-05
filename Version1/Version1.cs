@@ -189,7 +189,7 @@ namespace Testing
         }
 
         // main Dijkstra shortest path method
-        public int DijkstraSP(string sourceName, string destinationName)
+        public string CalcualteShortestPath(string sourceName, string destinationName)
         {
             TubeEdge[] edgeTo = new TubeEdge[stations.Length];
 
@@ -283,7 +283,7 @@ namespace Testing
             Console.WriteLine();
             Console.WriteLine($"Total journey time: {totalJourneyTime} minutes");
 
-            return distances[destinationID];
+            return "version 2 result";
         }
 
         //END OF DIJKSTRA 
