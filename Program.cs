@@ -125,18 +125,14 @@ namespace Testing
             // FUNCTIONS
 
             // function to test CONSISTENCY
-            ConsistencyResults[] RunConsistencyTest(string startStation, string endStation)
+            List<ConsistencyResults> RunConsistencyTest(string startStation, string endStation)
             {
                 // create an array to contain the test results
-                ConsistencyResults[] results = new ConsistencyResults[3];
-
-                // results
-                ConsistencyResults? result1 = null;
-                ConsistencyResults? result2 = null;
-                ConsistencyResults? result3 = null;
+                List<ConsistencyResults> results = new List<ConsistencyResults>();
 
                 // create an instance of solution 1
                 Version3 version3 = new Version3();
+                // generate its AL
                 version3.GenerateAdjacencyList();
 
                 // initialise return string representing path
@@ -146,7 +142,7 @@ namespace Testing
                 calculatedPath = version3.CalcualteShortestPath(startStation, endStation);
 
                 Console.WriteLine($"Route to test: {startStation} to {endStation}");
-                Console.WriteLine($"---------------------------------------------");
+                Console.WriteLine($"===============================================");
                 Console.WriteLine($"Version 3:");
                 Console.WriteLine($"{calculatedPath}");
                 Console.WriteLine($"---------------------------------------------");
@@ -183,16 +179,17 @@ namespace Testing
                     // stop the timer for V1
                     timerV1.Stop();
 
-                    // get the timespan
-                    TimeSpan timeV1 = timerV1.Elapsed;
                 }
+
+                // get the timespan
+                TimeSpan timeV1 = timerV1.Elapsed;
 
                 // result3.AddTiming
                 // string totalTimeString = String.Format("{0}", totalTime);
 
                 Console.WriteLine($"Route to test: {startStation} to {endStation}, {testCount} cycles");
-                Console.WriteLine($"-----------------------------------------------------------------");
-                Console.WriteLine($"Version 3 execution time: {timerV1.ToString()} ms");
+                Console.WriteLine($"=================================================================");
+                Console.WriteLine($"Version 3 execution time: {timeV1.Milliseconds} ms");
                 Console.WriteLine($"---------------------------------------------");
 
 
