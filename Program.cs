@@ -15,8 +15,8 @@ namespace Testing
             PopulateStationsDictionay();
 
             // start and finish stations
-            string startStation = "nothing selected";
-            string endStation = "nothing selected";
+            string startStation = string.Empty;
+            string endStation = string.Empty;
 
             // number of tests to run
             int testCycles = 10;     
@@ -30,15 +30,17 @@ namespace Testing
                 Console.Clear();
                 Console.WriteLine("******************************************************************");
                 Console.WriteLine("Testing 3 Different Implementations of Dijkstra's Search Algorithm");
-                Console.WriteLine("      - check for consistency and time taken to execute -");
+                Console.WriteLine("            - CONSISTENCY check and BENCHMARKING -");
                 Console.WriteLine("******************************************************************");
                 Console.WriteLine();
                 Console.WriteLine("Please select an option:");
                 Console.WriteLine();
-                Console.WriteLine("1. Type in stations to walk between");
-                Console.WriteLine("2. Choose number of tests iterations (1-100)");
-                Console.WriteLine("3. Run test");
-                Console.WriteLine("4. Exit");
+                Console.WriteLine("1. Type in stations to walk between for consistency check");
+                Console.WriteLine("2. Choose number of tests iterations (1-100) for benchmarking");
+                Console.WriteLine("3. Run CONSISTENCY test");
+                Console.WriteLine("4. Run BENCHMARK test");
+                Console.WriteLine("5. Print results of tests");
+                Console.WriteLine("6. Exit");
                 Console.WriteLine();
                 Console.WriteLine($"Current station selections:");
                 Console.WriteLine($"start:\t\t{startStation}\nend:\t\t{endStation}");
@@ -63,7 +65,7 @@ namespace Testing
                         break;
 
                     case 3:
-                        if (startStation == "" || endStation == "")
+                        if (startStation == string.Empty || endStation == string.Empty)
                         {
                             Console.WriteLine("No stations selected");
                             Console.WriteLine("Press any key to continue...");
@@ -72,19 +74,44 @@ namespace Testing
                         else
                         {
                             Console.Clear();
-                            Console.WriteLine("//////////////////");
+                            Console.WriteLine("////////////////////////////");
                             Console.WriteLine();
-                            Console.WriteLine("Running test...");
+                            Console.WriteLine("Running Consistency test...");
                             Console.WriteLine();
-                            Console.WriteLine("//////////////////");
+                            Console.WriteLine("////////////////////////////");
                             Console.WriteLine();
 
-                            // returns a TestResult object
-                            TestResult[] results = RunTest(startStation, endStation, testCycles);
+                            // returns a TestResult object array
+                            ConsistencyResults[] results = RunConsistencyTest(startStation, endStation);
                         }
 
                         break;
                     case 4:
+                        if (startStation == string.Empty || endStation == string.Empty)
+                        {
+                            Console.WriteLine("No stations selected");
+                            Console.WriteLine("Press any key to continue...");
+                            Console.ReadKey();
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            Console.WriteLine("////////////////////////////");
+                            Console.WriteLine();
+                            Console.WriteLine("Running Benchmarking test...");
+                            Console.WriteLine();
+                            Console.WriteLine("////////////////////////////");
+                            Console.WriteLine();
+
+                            // returns a BenchmarkResult object array
+                            List<BenchmarkResults> results = RunBenchmarkTest(startStation, endStation, testCycles);
+                        }
+
+                        break;
+                    case 5:
+                        // print results to go here
+                        break;
+                    case 6:
                         exit = true;
                         break;
                     default:
@@ -97,21 +124,48 @@ namespace Testing
             
             // FUNCTIONS
 
-            // function to 
-            TestResult[] RunTest(string startStation, string endStation, int testCount)
+            // function to test CONSISTENCY
+            ConsistencyResults[] RunConsistencyTest(string startStation, string endStation)
+            {
+                // create an array to contain the test results
+                ConsistencyResults[] results = new ConsistencyResults[3];
+
+                // results
+                ConsistencyResults? result1 = null;
+                ConsistencyResults? result2 = null;
+                ConsistencyResults? result3 = null;
+
+                // create an instance of solution 1
+                Version3 version3 = new Version3();
+                version3.GenerateAdjacencyList();
+
+                // initialise return string representing path
+                string calculatedPath = "no path returned by Version";
+
+                // run the algo with the start and finish stations
+                calculatedPath = version3.CalcualteShortestPath(startStation, endStation);
+
+                Console.WriteLine($"Route to test: {startStation} to {endStation}");
+                Console.WriteLine($"---------------------------------------------");
+                Console.WriteLine($"Version 3:");
+                Console.WriteLine($"{calculatedPath}");
+                Console.WriteLine($"---------------------------------------------");
+
+                Console.ReadKey();
+                return results;
+
+            }   // end of CONSISTENCY test
+
+            // function to return BENCHMARK result for different paths for each version
+            List<BenchmarkResults> RunBenchmarkTest(string startStation, string endStation, int testCount)
             {
                 // create new stopwatches
                 Stopwatch timerV1 = new Stopwatch();
                 Stopwatch timerV2 = new Stopwatch();
                 Stopwatch timerV3 = new Stopwatch();
 
-                // create an array to contain the test results
-                TestResult[] results = new TestResult[3];
-
-                // results
-                TestResult? result1 = null;
-                TestResult? result2 = null;
-                TestResult? result3 = null;
+                // create an list to contain the test results
+                List<BenchmarkResults> results = new List<BenchmarkResults>();
 
                 // create an instance of solution 1
                 Version3 version3 = new Version3();
@@ -122,10 +176,10 @@ namespace Testing
                 {
                     // start the timer for V1
                     timerV1.Start();
-                    
+
                     // run the algo with the start and finish stations
                     version3.CalcualteShortestPath(startStation, endStation);
-                    
+
                     // stop the timer for V1
                     timerV1.Stop();
 
@@ -136,10 +190,16 @@ namespace Testing
                 // result3.AddTiming
                 // string totalTimeString = String.Format("{0}", totalTime);
 
+                Console.WriteLine($"Route to test: {startStation} to {endStation}, {testCount} cycles");
+                Console.WriteLine($"-----------------------------------------------------------------");
+                Console.WriteLine($"Version 3 execution time: {timerV1.ToString()} ms");
+                Console.WriteLine($"---------------------------------------------");
+
+
                 Console.ReadKey();
                 return results;
 
-            }
+            }   // end of BENCHMARK test
 
 
             // function to select a valid station
@@ -172,7 +232,12 @@ namespace Testing
             // function to input valid number of tests
             void InputNumberOfTests()
             {
-
+                int input = -1;
+                Console.WriteLine("Please enter an number between 1 and 1000: ");
+                if (int.TryParse(Console.ReadLine(), out input) & (input >= 1 && input <= 1000))
+                {
+                    testCycles = input;
+                }
             }
 
             // function to create Stations Dictionary

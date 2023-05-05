@@ -76,7 +76,7 @@ namespace Testing
 
         } // end of generating the adjacency list
 
-        public void CalcualteShortestPath(string start, string end)
+        public string CalcualteShortestPath(string start, string end)
         {
             Station startStation = stations[start];
             Station endStation = stations[end];
@@ -86,6 +86,8 @@ namespace Testing
             var previous = new Dictionary<Station, Station>();
             var queue = new List<Station>();
 
+            // O of N as going through each element
+            // initialising distances list
             foreach (var station in stations.Values)
             {
                 if (station == startStation)
@@ -100,17 +102,24 @@ namespace Testing
                 queue.Add(station);
             }
 
-            while (queue.Count > 0)
+            // total O of N^3 as N * N * N^3
+            while (queue.Count > 0) // O of N as could have all stations in the queue
+
             {
+                // sorting the queue big O of ? OrderBy() - uses Quicksort O(N*logN) average O(N2)
                 var currentStation = queue.OrderBy(station => distances[station]).First();
 
+                // is this needed?
                 if (currentStation == endStation)
                 {
                     break;
                 }
+                
 
+                // O of 1
                 queue.Remove(currentStation);
 
+                // O of N as need to go through each neighbour (could be every station is neighbour?)
                 foreach (var neighbour in currentStation.Neighbours)
                 {
                     var alternativeDistance = distances[currentStation] + neighbour.Item3;
@@ -127,6 +136,11 @@ namespace Testing
             var path = new LinkedList<Station>();
             var current = endStation;
 
+            // initialise a string builder to record output of algo1
+            /////// testing output
+            StringBuilder pathString = new StringBuilder();  
+
+            // big O of N
             while (current != null)
             {
                 path.AddFirst(current);
@@ -134,12 +148,10 @@ namespace Testing
             }
             if (path.First.Value != startStation || path.Last.Value != endStation)
             {
-                Console.WriteLine("No Path Found.");
-                return;
+                /////// testing output
+                pathString.Append("No path found");
+                return pathString.ToString();
             }
-            Console.WriteLine();
-            Console.WriteLine("Shortest Path:");
-            Console.WriteLine();
 
             var previousStation = default(Station);
             var currentLine = "";
@@ -151,17 +163,21 @@ namespace Testing
                 {
                     var neighbour = station.Neighbours.First(n => n.Item1 == previousStation);
 
-                    Console.WriteLine($"{neighbour.Item2}: {previousStation.Name} -> {station.Name} ({neighbour.Item3} mins)");
-                    Console.WriteLine();
+                    /////// testing output
+                    pathString.Append($"{previousStation.Name} to {station.Name} -> {neighbour.Item3}mins\n"); 
+                    
                     totalTime += neighbour.Item3;
                 }
                 currentLine = station.Line;
                 previousStation = station;
             }
 
-            Console.WriteLine();
-            Console.WriteLine($"Total Walk Time: {totalTime} mins");
-        }
+            /////// testing output
+            pathString.Append($"\nTotal walk time {totalTime} mins");
 
+            // return the path as string
+            return pathString.ToString();
+
+        } // end of CalculateShortestPath
     }
 }
