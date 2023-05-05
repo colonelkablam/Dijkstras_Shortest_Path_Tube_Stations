@@ -131,9 +131,6 @@ namespace Testing
 
                     // get the timespan
                     TimeSpan timeV1 = timerV1.Elapsed;
-
-                    // add the 
-                    // totalTime += timeV1.TotalMilliseconds;
                 }
 
                 // result3.AddTiming
