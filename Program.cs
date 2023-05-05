@@ -15,7 +15,7 @@ namespace Testing
             // call function to populate stations dictionary from csv file
             PopulateStationsDictionay();
 
-            // start and finish stations
+            // start and finish default stations
             string startStation = "Vauxhall";
             string endStation = "Paddington";
 
@@ -57,16 +57,17 @@ namespace Testing
 
                 switch (selection)
                 {
+                    // CHANGE START AND END STATIONS
                     case 1:
                         Console.Clear();
                         SelectStation();
                         break;
-
+                    // CHANGE NUMBER OF TEST CYCLES
                     case 2:
                         Console.Clear();
                         InputNumberOfTests();
                         break;
-
+                    // CONSISTANCY TEST
                     case 3:
                         if (startStation == string.Empty || endStation == string.Empty)
                         {
@@ -89,6 +90,7 @@ namespace Testing
                         }
 
                         break;
+                    // BENCHMARKING TEST
                     case 4:
                         if (startStation == string.Empty || endStation == string.Empty)
                         {
@@ -113,7 +115,8 @@ namespace Testing
                         break;
                     case 5:
                         Console.Clear();
-                        Console.WriteLine(benchmarkResults.GetBenchmarkTimes());
+                        Console.WriteLine(benchmarkResults.GetBenchmarkTimes()[startStation + "/" + endStation].ToString());
+                        Console.ReadKey();
                         
                         break;
                     case 6:

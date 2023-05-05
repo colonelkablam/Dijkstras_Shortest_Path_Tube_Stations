@@ -5,8 +5,8 @@ namespace Testing
 {
     public class BenchmarkResults
     {
-        // a dictionary to store the benchmarking results from different routes
-        private Dictionary<string, List<float>> benchmarkTimes;
+        // a List of benchmarking result objects
+        private List<BenchmarkResult> results;
 
         public BenchmarkResults()
         {
