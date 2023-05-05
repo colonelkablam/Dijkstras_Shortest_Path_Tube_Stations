@@ -116,7 +116,7 @@ namespace Testing
                         break;
                     case 5:
                         Console.Clear();
-                        Console.WriteLine(benchmarkResults.GetBenchmarkTimes());
+                        benchmarkResults.PrintResultsTable();
                         Console.ReadKey();
                         
                         break;
@@ -169,43 +169,55 @@ namespace Testing
                 // create new stopwatches
                 Stopwatch timer = new Stopwatch();
 
-                // create an instance of solution 3
+
+                // create an instance of version 1
+                Version1 version1 = new Version1();
+
+                // create an instance of version 2
+                //Version2 version2 = new Version2();
+
+                // create an instance of version 3
                 Version3 version3 = new Version3();
+                // adjacency list is generated from a .csv file
                 version3.GenerateAdjacencyList();
 
+
                 //////////////////////      will need to iterate through versions       ////////////////////////// 
-
-                // create an list to contain the test results for the route test per version
-                List<float> resultsRoute = new List<float>();
-
-                // run the test the requested number of times
-                for (int i = 0; i < testCycles; i++)
+                for (int j = 1; j <= 3; j++)
                 {
-                    // start the timer for V1
-                    timer.Start();
+                    // create an list to contain the test results for the route test per version
+                    List<float> resultsRoute = new List<float>();
 
-                    // run the version with the start and finish stations
-                    version3.CalcualteShortestPath(startStation, endStation);
+                    // run the test the requested number of times
+                    for (int i = 0; i < testCycles; i++)
+                    {
+                        // start the timer for V1
+                        timer.Start();
 
-                    // stop the timer for V1
-                    timer.Stop();
+                        // run the version with the start and finish stations
+                        version3.CalcualteShortestPath(startStation, endStation);
+
+                        // stop the timer for V1
+                        timer.Stop();
+                    }
+
+                    // get the timespan 
+                    TimeSpan timeTaken = timer.Elapsed;
+
+                    // get a float for the average per cycle
+                    float averageT = (float)timeTaken.Milliseconds / (float)testCycles;
+
+                    // add time taken per cycle to list
+                    resultsRoute.Add(averageT);
+
+                    Console.WriteLine($"Route to test: {startStation} to {endStation}, {testCycles} cycles");
+                    Console.WriteLine($"=================================================================");
+                    Console.WriteLine($"Version 3: execution time per cycle: {averageT} ms");
+                    Console.WriteLine($"-----------------------------------------------------------------");
+
+                    // add result to the main results 
+                    resultsAll.AddResult(startStation, endStation, resultsRoute);
                 }
-
-                // get the timespan 
-                TimeSpan timeTaken = timer.Elapsed;
-
-                // get a float for the average per cycle
-                float averageT = (float)timeTaken.Milliseconds / (float)testCycles;
-
-                // add time taken per cycle to list
-                resultsRoute.Add(averageT);
-
-                Console.WriteLine($"Route to test: {startStation} to {endStation}, {testCycles} cycles");
-                Console.WriteLine($"=================================================================");
-                Console.WriteLine($"Version 3: execution time per cycle: {averageT} ms");
-                Console.WriteLine($"-----------------------------------------------------------------");
-
-                resultsAll.AddResult(startStation, endStation, resultsRoute); 
 
                 // wait for key press
                 Console.ReadKey();

@@ -38,12 +38,14 @@ namespace Testing
         public void PrintResultsTable()
         {
             Console.WriteLine("BENCHMARKING Results Table:");
-            foreach (var result in results)
+            Console.WriteLine("----------------------------------------------");
+
+            for (int i = 0; i < results.Count(); i ++)
             {
-                Console.WriteLine($"{result.GetRoute}");
-                foreach (var time in result.GetTimes())
+                Console.WriteLine($"Route {i}: {results[i].GetRoute()}");
+                foreach (var time in results[i].GetTimes())
                 {
-                    Console.WriteLine($"{time}");
+                    Console.WriteLine($"Version 1 execution time: {time} ms");
                 }
             }
         }
