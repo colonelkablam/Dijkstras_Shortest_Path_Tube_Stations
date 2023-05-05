@@ -22,7 +22,7 @@ namespace Testing
             // number of tests to run
             int testCycles = 10000;
 
-            BenchmarkResults benchmarkResults = new BenchmarkResults();
+            BenchmarkingResults benchmarkResults = new BenchmarkingResults();
 
             // start the menu
             bool exit = false;
@@ -62,11 +62,13 @@ namespace Testing
                         Console.Clear();
                         SelectStation();
                         break;
+
                     // CHANGE NUMBER OF TEST CYCLES
                     case 2:
                         Console.Clear();
                         InputNumberOfTests();
                         break;
+
                     // CONSISTANCY TEST
                     case 3:
                         if (startStation == string.Empty || endStation == string.Empty)
@@ -84,12 +86,11 @@ namespace Testing
                             Console.WriteLine();
                             Console.WriteLine("////////////////////////////");
                             Console.WriteLine();
-
                             // returns a TestResult object array
                             List<ConsistencyResults> resultsConsistency = RunConsistencyTest(startStation, endStation);
                         }
-
                         break;
+
                     // BENCHMARKING TEST
                     case 4:
                         if (startStation == string.Empty || endStation == string.Empty)
@@ -115,7 +116,7 @@ namespace Testing
                         break;
                     case 5:
                         Console.Clear();
-                        Console.WriteLine(benchmarkResults.GetBenchmarkTimes()[startStation + "/" + endStation].ToString());
+                        Console.WriteLine(benchmarkResults.GetBenchmarkTimes());
                         Console.ReadKey();
                         
                         break;
@@ -161,9 +162,9 @@ namespace Testing
             }   // end of CONSISTENCY test
 
             // function to return BENCHMARK result for different paths for each version
-            BenchmarkResults RunBenchmarkTest(string startStation, string endStation, int testCycles)
+            BenchmarkingResults RunBenchmarkTest(string startStation, string endStation, int testCycles)
             {
-                BenchmarkResults results = new BenchmarkResults();
+                BenchmarkingResults resultsAll = new BenchmarkingResults();
 
                 // create new stopwatches
                 Stopwatch timer = new Stopwatch();
@@ -172,11 +173,10 @@ namespace Testing
                 Version3 version3 = new Version3();
                 version3.GenerateAdjacencyList();
 
+                //////////////////////      will need to iterate through versions       ////////////////////////// 
+
                 // create an list to contain the test results for the route test per version
-                List<float> result = new List<float>();
-
-                //////////////////////////////////////////////// will need to iterate through versions
-
+                List<float> resultsRoute = new List<float>();
 
                 // run the test the requested number of times
                 for (int i = 0; i < testCycles; i++)
@@ -184,7 +184,7 @@ namespace Testing
                     // start the timer for V1
                     timer.Start();
 
-                    // run the algo with the start and finish stations
+                    // run the version with the start and finish stations
                     version3.CalcualteShortestPath(startStation, endStation);
 
                     // stop the timer for V1
@@ -198,18 +198,18 @@ namespace Testing
                 float averageT = (float)timeTaken.Milliseconds / (float)testCycles;
 
                 // add time taken per cycle to list
-                result.Add(averageT);
+                resultsRoute.Add(averageT);
 
                 Console.WriteLine($"Route to test: {startStation} to {endStation}, {testCycles} cycles");
                 Console.WriteLine($"=================================================================");
                 Console.WriteLine($"Version 3: execution time per cycle: {averageT} ms");
                 Console.WriteLine($"-----------------------------------------------------------------");
 
-                results.AddBenchmarkTime(startStation + "/" + endStation, result); 
+                resultsAll.AddResult(startStation, endStation, resultsRoute); 
 
                 // wait for key press
                 Console.ReadKey();
-                return results;
+                return resultsAll;
 
             }   // end of BENCHMARK test
 
