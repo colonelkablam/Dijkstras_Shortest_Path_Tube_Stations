@@ -204,6 +204,9 @@ namespace Testing
                 // create an instance of Version 3
                 testables.Add(new Version3());
 
+                // create a List for recording if app executed/crashed
+                List<string> miniCrashLog = new List<string>();
+
                 // create a new result to populate with times
                 BenchmarkResult results = new BenchmarkResult($"{startStation} to {endStation}");
 
@@ -211,36 +214,51 @@ namespace Testing
                 int versionNum = 1;
                 foreach (ITestable version in testables)
                 {
-                    // create new stopwatch
-                    Stopwatch timer = new Stopwatch();
-
-                    // start the timer
-                    timer.Start();
-
-                    // run the test the requested number of times
-                    for (int i = 0; i < testCycles; i++)
+                    // catch and return any error from running application
+                    try
                     {
-                        // run the version with the start and finish stations
-                        version.CalcualteShortestPath(startStation, endStation);
+                        // create new stopwatch
+                        Stopwatch timer = new Stopwatch();
+
+                        // start the timer
+                        timer.Start();
+
+                        // run the test the requested number of times
+                        for (int i = 0; i < testCycles; i++)
+                        {
+                            // run the version with the start and finish stations
+                            version.CalcualteShortestPath(startStation, endStation);
+                        }
+
+                        // stop the timer
+                        timer.Stop();
+
+
+                        // get the timespan 
+                        TimeSpan timeTaken = timer.Elapsed;
+
+                        // get a float for the average per cycle
+                        double averageT = timeTaken.TotalMilliseconds / testCycles;
+
+                        Console.WriteLine($"Version {versionNum} finished testing in {timeTaken.TotalMilliseconds / 1000} seconds...");
+                        miniCrashLog.Add("successful");
+
+                        // add time taken per cycle to dictionary
+                        results.AddTime(versionNum, averageT);
+                        versionNum++;
                     }
-                    // stop the timer
-                    timer.Stop();
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Version {versionNum} failed to execute... ");
+                        versionNum++;
+                        miniCrashLog.Add($"failed; {e.Message}");
+                    }
 
-                    // get the timespan 
-                    TimeSpan timeTaken = timer.Elapsed;
-
-                    // get a float for the average per cycle
-                    double averageT = timeTaken.TotalMilliseconds / testCycles;
-
-                    Console.WriteLine($"Version {versionNum} finished testing in {timeTaken.TotalMilliseconds / 1000} seconds...");
-
-                    // add time taken per cycle to dictionary
-                    results.AddTime(versionNum, averageT);
-                    versionNum++;
-
-
-                    // timer reset
-                    timer.Reset();
+                }
+                // print out log
+                for (int i = 0; i < miniCrashLog.Count(); i++)
+                {
+                    Console.WriteLine($"Version {i + 1} executed: {miniCrashLog[i]}");
                 }
 
                 Console.WriteLine($"Press any key to return to menu to see print/show results...");
