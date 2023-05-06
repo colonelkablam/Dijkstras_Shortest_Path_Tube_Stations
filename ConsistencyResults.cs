@@ -9,26 +9,37 @@ namespace Testing
 {
     public class ConsistencyResults
     {
-        private List<JourneyLinkedList> routesTaken;
+        // routes taken by the differnt versions
+        private Dictionary<int, List<JourneyLinkedList>> routesTaken;
 
         public ConsistencyResults() 
         {
-            // default results
-            routesTaken = new List<JourneyLinkedList>();
+            // empty results dictionary
+            routesTaken = new Dictionary<int, List<JourneyLinkedList>>();
         }
 
         // Add route
-        public void AddRoute(JourneyLinkedList route)
+        public void AddRoutes(int v, List<JourneyLinkedList> route)
         {
-            routesTaken.Add(route);
+            routesTaken.Add(v, route);
         }
 
         // Get route 
-        public void DisplayRoutes()
+        public void DisplayResultsTable()
         {
-            foreach (JourneyLinkedList route in routesTaken)
+            // iterate through version numbers (dictionary length will the number of diff routes tested)
+            for (int i = 1; i <= routesTaken.Count(); i++)
             {
-                route.DisplayAll();
+                Console.WriteLine($"Test Number {i}");
+                Console.WriteLine($"===============");
+
+                // interate through the different versions
+                for (int j = 0; j < routesTaken[i].Count(); j++)
+                {
+                    // display version being displayed
+                    Console.WriteLine($"Version {j+1}:");
+                    routesTaken[i][j].DisplayAll();
+                }
             }
             
         }

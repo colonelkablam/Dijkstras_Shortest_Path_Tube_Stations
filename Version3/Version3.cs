@@ -9,7 +9,7 @@ using Testing;
 
 namespace Testing
 {
-    public class Version3
+    public class Version3 : ITestable
     {
         // fields
 
@@ -21,6 +21,7 @@ namespace Testing
         public Version3()
         {
             stations = new Dictionary<string, Station>();
+            GenerateAdjacencyList();
         }
 
         // generates the adjacency list 
@@ -130,10 +131,8 @@ namespace Testing
             var path = new LinkedList<Station>();
             var current = endStation;
 
-            // initialise a string builder to record output of algo1
-            /////// testing output
-            StringBuilder pathString = new StringBuilder();
-            JourneyLinkedList route = new JourneyLinkedList($"{startStation} to {endStation}");
+            /////// testing data collection
+            JourneyLinkedList route = new JourneyLinkedList($"{start} to {end}");
 
             // big O of N
             while (current != null)
@@ -143,8 +142,7 @@ namespace Testing
             }
             if (path.First.Value != startStation || path.Last.Value != endStation)
             {
-                /////// testing output
-                pathString.Append("No path found");
+                /////// testing - return an empty result
                 return route;
             }
 
@@ -158,8 +156,7 @@ namespace Testing
                 {
                     var neighbour = station.Neighbours.First(n => n.Item1 == previousStation);
 
-                    /////// testing output
-                    pathString.Append($"{previousStation.Name}  ->  {station.Name}  ({neighbour.Item3}mins)\n");
+                    /////// testing - add 'step' between stations to the overall journey
                     route.AddJourney(new Journey(previousStation.Name, station.Name, neighbour.Item3));
                     
                     totalTime += neighbour.Item3;
@@ -168,11 +165,10 @@ namespace Testing
                 previousStation = station;
             }
 
-            /////// testing output
-            pathString.Append($"\nTotal walk time {totalTime} mins");
+            /////// testing - add total time to JourneyLinkedList
             route.AddWalkTime(totalTime);
 
-            // return the path as string
+            // return the path as JourneyLinkedList object
             return route;
 
         } // end of CalculateShortestPath

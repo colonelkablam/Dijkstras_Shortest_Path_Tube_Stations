@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Testing
 {
-    public class Version1
+    public class Version1 : ITestable
     {
         private TubeStation[] stations;
         private int[,] adjacencyMatrix;
@@ -189,7 +189,7 @@ namespace Testing
         }
 
         // main Dijkstra shortest path method
-        public string CalcualteShortestPath(string sourceName, string destinationName)
+        public JourneyLinkedList CalcualteShortestPath(string sourceName, string destinationName)
         {
             TubeEdge[] edgeTo = new TubeEdge[stations.Length];
 

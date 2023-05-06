@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Testing
 {
     public class JourneyLinkedList
     {
+        // fields
         private string name;
         private int walkTime;
         private Journey? head;
@@ -20,31 +18,48 @@ namespace Testing
         // method to add to the end of the linked list
         public void AddJourney(Journey journey)
         {
-            Journey? next = this.head;
-            
-            while (next != null)
+            // if empty list then add journey as head
+            if (head == null)
             {
-                next = next.GetNext();
+                head = journey;
+                return;
             }
 
-            next.AddNext(journey);
+            // keep track of node
+            Journey? current = this.head;
+            // look for end of linked list
+            while (current.GetNext() != null)
+            {
+                current = current.GetNext();
+            }
+            // add next journey to list
+            current.AddNext(journey);
         }
         public void AddWalkTime(int time)
         {
             this.walkTime = time;
         }
 
-        // display jorneys and times
+        // display journey calculated from different versions and walk times
         public void DisplayAll()
         {
-            Console.WriteLine($"Route start and end: {name}");
+            // show route being calculated
+            Console.WriteLine($"Route: {name}");
+            Console.WriteLine($"==================================");
+
+            // keep track of current node
             Journey? current = this.head;
 
+            // keep going until the end!
             while (current != null)
             {
-                Console.WriteLine($"{current.GetStart()} - {current.GetEnd()} ({current.GetTime()} mins");
+                Console.WriteLine($"{current.GetStart()} - {current.GetEnd()} ({current.GetTime()}) mins");
                 current = current.GetNext();
             }
+
+            // display total time to walk
+            Console.WriteLine($"\nTime to walk: {this.walkTime}");
+            Console.WriteLine($"==================================");
         }
 
     }

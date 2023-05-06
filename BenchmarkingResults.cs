@@ -35,7 +35,7 @@ namespace Testing
         }
 
         // get the results
-        public void PrintResultsTable()
+        public void DisplayResultsTable()
         {
             Console.WriteLine("BENCHMARKING Results Table:");
             Console.WriteLine("----------------------------------------------");

@@ -22,7 +22,11 @@ namespace Testing
             // number of tests to run
             int testCycles = 10000;
 
-            BenchmarkingResults benchmarkResults = new BenchmarkingResults();
+            BenchmarkingResults benchmarkingResults = new BenchmarkingResults();
+            ConsistencyResults consistencyResults = new ConsistencyResults();
+            int consistencyTestNum = 1;
+
+
 
             // start the menu
             bool exit = false;
@@ -42,8 +46,9 @@ namespace Testing
                 Console.WriteLine("2. Choose number of tests cycles (1-100,000) for BENCHMARKING");
                 Console.WriteLine("3. Run CONSISTENCY test");
                 Console.WriteLine("4. Run BENCHMARK test");
-                Console.WriteLine("5. Print results of tests");
-                Console.WriteLine("6. Exit");
+                Console.WriteLine("5. Display results of tests");
+                Console.WriteLine("6. Print results of tests");
+                Console.WriteLine("7. Exit");
                 Console.WriteLine();
                 Console.WriteLine($"Current station selections:");
                 Console.WriteLine($"start:\t\t{startStation}\nend:\t\t{endStation}");
@@ -86,8 +91,13 @@ namespace Testing
                             Console.WriteLine();
                             Console.WriteLine("////////////////////////////");
                             Console.WriteLine();
-                            // returns a TestResult object array
-                            List<ConsistencyResults> resultsConsistency = RunConsistencyTest(startStation, endStation);
+
+                            // runs a consistencey test testult
+                            List<JourneyLinkedList> result = RunConsistencyTest(startStation, endStation);
+
+                            consistencyResults.AddRoutes(consistencyTestNum, result);
+                            consistencyTestNum++;
+
                         }
                         break;
 
@@ -110,17 +120,26 @@ namespace Testing
                             Console.WriteLine();
 
                             // returns a BenchmarkResult object array
-                            benchmarkResults = RunBenchmarkTest(startStation, endStation, testCycles);
+                            benchmarkingResults = RunBenchmarkTest(startStation, endStation, testCycles);
                         }
 
                         break;
                     case 5:
                         Console.Clear();
-                        benchmarkResults.PrintResultsTable();
+                        consistencyResults.DisplayResultsTable();
+                        benchmarkingResults.DisplayResultsTable();
                         Console.ReadKey();
                         
                         break;
+
                     case 6:
+                        Console.Clear();
+                        //consistencyResults.PrintResultsTable();
+                        //benchmarkingResults.PrintResultsTable();
+                        Console.ReadKey();
+
+                        break;
+                    case 7:
                         exit = true;
                         break;
                     default:
@@ -131,34 +150,32 @@ namespace Testing
                 }
             }  
             
-            // FUNCTIONS
+            // MAIN FUNCTIONS
 
             // function to test CONSISTENCY
-            List<ConsistencyResults> RunConsistencyTest(string startStation, string endStation)
+            List<JourneyLinkedList> RunConsistencyTest(string startStation, string endStation)
             {
-                // create an array to contain the test results
-                List<ConsistencyResults> results = new List<ConsistencyResults>();
+                // create a list to hold Versions to be tested
+                List<ITestable> testables= new List<ITestable>();
 
-                // create an instance of solution 1
-                Version3 version3 = new Version3();
-                // generate its AL
-                version3.GenerateAdjacencyList();
+                // create an List to contain the test results
+                List<JourneyLinkedList> results = new List<JourneyLinkedList>();
 
-                // initialise return string representing path
+                // create an instance of version 1 and add to list
+                testables.Add(new Version1());
+                // create an instance of Version 2
+                //testables.Add(new Version1());
+                // create an instance of Version 3
+                testables.Add(new Version1());
 
-                JourneyLinkedList calculatedPath = null;
-
-                // run the algo with the start and finish stations
-                calculatedPath = version3.CalcualteShortestPath(startStation, endStation);
-
-               /*
-                Console.WriteLine($"Route to test: {startStation} to {endStation}");
-                Console.WriteLine($"===============================================");
-                Console.WriteLine($"Version 3:");
-                Console.WriteLine($"{calculatedPath}");
-                Console.WriteLine($"---------------------------------------------");
-                */
-                Console.ReadKey();
+                // run the algo with the start and finish stations to return a route for a version
+                foreach (ITestable version in testables)
+                {
+                    JourneyLinkedList calculatedPath = version.CalcualteShortestPath(startStation, endStation);
+                    results.Add(calculatedPath);
+                }
+                Console.WriteLine("Finsihed test");
+                Console.ReadKey(); // 
                 return results;
 
             }   // end of CONSISTENCY test

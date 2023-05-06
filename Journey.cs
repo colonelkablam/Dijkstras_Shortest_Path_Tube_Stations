@@ -24,7 +24,7 @@ namespace Testing
         }
         public string GetEnd()
         {
-            return start;
+            return end;
         }
         public int GetTime()
         {
