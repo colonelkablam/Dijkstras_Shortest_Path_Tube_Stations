@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Testing
+﻿namespace Testing
 {
     public class Journey
     {

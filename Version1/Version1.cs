@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Testing
+﻿namespace Testing
 {
     public class Version1 : ITestable
     {
@@ -251,6 +245,9 @@ namespace Testing
 
             // Display the shortest path
 
+            /////// testing - cerate JourneyLinkedList to collect route
+            JourneyLinkedList route = new JourneyLinkedList("Version 1");
+
             TubeEdge[] pathArray = new TubeEdge[100];
             int pathIndex = 0;
             int totalJourneyTime = 0;
@@ -261,29 +258,40 @@ namespace Testing
                 totalJourneyTime += edge.GetWalkingTime();
             }
 
-            Console.WriteLine();
-            Console.WriteLine($"Shortest path from {sourceName} to {destinationName}:");
-            Console.WriteLine();
+            //Console.WriteLine();
+            //Console.WriteLine($"Shortest path from {sourceName} to {destinationName}:");
+            //Console.WriteLine();
             string previousLine = null;
             for (int i = pathIndex - 1; i >= 0; i--)
             {
                 TubeEdge currentEdge = pathArray[i];
                 string currentLine = currentEdge.GetTubeLine();
 
-                if (previousLine != null && currentLine != previousLine)
+                /*
+                 * if (previousLine != null && currentLine != previousLine)
                 {
                     Console.WriteLine($"Change from {previousLine} Line to {currentLine} Line");
-                }
 
-                Console.WriteLine($"{currentEdge.GetSource().GetStationName()} to {currentEdge.GetDestination().GetStationName()} ({currentEdge.GetWalkingTime()} min) on {currentEdge.GetTubeLine()} Line");
+                }
+                */
+
+                //Console.WriteLine($"{currentEdge.GetSource().GetStationName()} to {currentEdge.GetDestination().GetStationName()} ({currentEdge.GetWalkingTime()} min) on {currentEdge.GetTubeLine()} Line");
+
+                /////// testing - add 'step' between stations to the overall journey
+                route.AddJourney(new Journey(currentEdge.GetSource().GetStationName(), currentEdge.GetDestination().GetStationName(), currentEdge.GetWalkingTime()));
 
                 previousLine = currentLine;
             }
-
+            /*
             Console.WriteLine();
             Console.WriteLine($"Total journey time: {totalJourneyTime} minutes");
+            */
 
-            return "version 2 result";
+            /////// testing - add total time to JourneyLinkedList
+            route.AddWalkTime(totalJourneyTime);
+
+            // return route to call
+            return route;
         }
 
         //END OF DIJKSTRA 

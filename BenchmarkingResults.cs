@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Testing
+﻿namespace Testing
 {
     public class BenchmarkingResults
     {
@@ -15,39 +12,26 @@ namespace Testing
             results = new List<BenchmarkResult>();
         }
 
-        // get benchmarkTimes 
-        public List<BenchmarkResult> GetBenchmarkTimes()
+        // add a result
+        public void AddResult(BenchmarkResult result)
         {
-            return results;
-        }
-
-        // add benchmark times for a route 
-        public void AddResult(string start, string end, List<float> times)
-        {
-            BenchmarkResult bm = new BenchmarkResult(start, end, times);
-            results.Add(bm);
-        }
-
-        // get the results
-        public List<BenchmarkResult> GetResults()
-        {
-            return results;
+            results.Add(result);
         }
 
         // get the results
         public void DisplayResultsTable()
         {
-            Console.WriteLine("BENCHMARKING Results Table:");
-            Console.WriteLine("----------------------------------------------");
-
-            for (int i = 0; i < results.Count(); i ++)
+            // iterate through version numbers (dictionary length is the number of diff routes tested)
+            for (int i = 0; i < results.Count(); i++)
             {
-                Console.WriteLine($"Route {i}: {results[i].GetRoute()}");
-                foreach (var time in results[i].GetTimes())
-                {
-                    Console.WriteLine($"Version 1 execution time: {time} ms");
-                }
+                Console.WriteLine($"=================================================================");
+                Console.WriteLine($"                    Test number {i + 1}");
+                Console.WriteLine($"=================================================================");
+
+                // display version being displayed
+                results[i].DisplayTimes();
             }
+
         }
     }
 }

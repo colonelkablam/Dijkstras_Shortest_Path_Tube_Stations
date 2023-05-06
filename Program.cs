@@ -1,6 +1,4 @@
-﻿using System;              
-using System.Diagnostics;  // StopWatch + TimeSpan
-using System.Runtime.ConstrainedExecution;
+﻿using System.Diagnostics;  // StopWatch + TimeSpan
 
 namespace Testing
 {
@@ -20,13 +18,11 @@ namespace Testing
             string endStation = "Paddington";
 
             // number of tests to run
-            int testCycles = 10000;
+            int testCycles = 100000;
 
             BenchmarkingResults benchmarkingResults = new BenchmarkingResults();
             ConsistencyResults consistencyResults = new ConsistencyResults();
             int consistencyTestNum = 1;
-
-
 
             // start the menu
             bool exit = false;
@@ -42,19 +38,24 @@ namespace Testing
                 Console.WriteLine();
                 Console.WriteLine("Please select an option:");
                 Console.WriteLine();
-                Console.WriteLine("1. Input stations to walk between for CONSISTENCY check");
-                Console.WriteLine("2. Choose number of tests cycles (1-100,000) for BENCHMARKING");
-                Console.WriteLine("3. Run CONSISTENCY test");
-                Console.WriteLine("4. Run BENCHMARK test");
-                Console.WriteLine("5. Display results of tests");
-                Console.WriteLine("6. Print results of tests");
-                Console.WriteLine("7. Exit");
+                Console.WriteLine("1. Change the START station");
+                Console.WriteLine("2. Change the END station");
+                Console.WriteLine("3. Change number of test cycles for BENCHMARKING");
                 Console.WriteLine();
-                Console.WriteLine($"Current station selections:");
+                Console.WriteLine("4. Run CONSISTENCY test");
+                Console.WriteLine("5. Display table of results");
+                Console.WriteLine();
+                Console.WriteLine("6. Run BENCHMARK test");
+                Console.WriteLine("7. Display table of results");
+                Console.WriteLine();
+                Console.WriteLine("8. Print results of tests");
+                Console.WriteLine("9. Exit");
+                Console.WriteLine();
+                Console.WriteLine($"Current Settings:");
                 Console.WriteLine($"start:\t\t{startStation}\nend:\t\t{endStation}");
-                Console.WriteLine($"iterations: {testCycles}");
+                Console.WriteLine($"iterations:\t{testCycles}");
                 Console.WriteLine();
-                Console.Write("Enter your choice (1-6): ");
+                Console.Write("Enter your choice (1-9): ");
 
                 // read user selection
                 int selection;
@@ -62,185 +63,189 @@ namespace Testing
 
                 switch (selection)
                 {
-                    // CHANGE START AND END STATIONS
+                    // CHANGE START STATION
                     case 1:
+                        Console.Clear();
+                        SelectStation();
+                        break;
+                    // CHANGE END STATION
+                    case 2:
                         Console.Clear();
                         SelectStation();
                         break;
 
                     // CHANGE NUMBER OF TEST CYCLES
-                    case 2:
+                    case 3:
                         Console.Clear();
                         InputNumberOfTests();
                         break;
 
                     // CONSISTANCY TEST
-                    case 3:
-                        if (startStation == string.Empty || endStation == string.Empty)
-                        {
-                            Console.WriteLine("No stations selected");
-                            Console.WriteLine("Press any key to continue...");
-                            Console.ReadKey();
-                        }
-                        else
-                        {
-                            Console.Clear();
-                            Console.WriteLine("////////////////////////////");
-                            Console.WriteLine();
-                            Console.WriteLine("Running Consistency test...");
-                            Console.WriteLine();
-                            Console.WriteLine("////////////////////////////");
-                            Console.WriteLine();
-
-                            // runs a consistencey test testult
-                            List<JourneyLinkedList> result = RunConsistencyTest(startStation, endStation);
-
-                            consistencyResults.AddRoutes(consistencyTestNum, result);
-                            consistencyTestNum++;
-
-                        }
-                        break;
-
-                    // BENCHMARKING TEST
                     case 4:
-                        if (startStation == string.Empty || endStation == string.Empty)
-                        {
-                            Console.WriteLine("No stations selected");
-                            Console.WriteLine("Press any key to continue...");
-                            Console.ReadKey();
-                        }
-                        else
-                        {
-                            Console.Clear();
-                            Console.WriteLine("////////////////////////////");
-                            Console.WriteLine();
-                            Console.WriteLine("Running Benchmarking test...");
-                            Console.WriteLine();
-                            Console.WriteLine("////////////////////////////");
-                            Console.WriteLine();
+                        Console.Clear();
+                        Console.WriteLine("////////////////////////////\n");
+                        Console.WriteLine("Running Consistency test...\n");
+                        Console.WriteLine("////////////////////////////\n");
+                        Console.WriteLine();
 
-                            // returns a BenchmarkResult object array
-                            benchmarkingResults = RunBenchmarkTest(startStation, endStation, testCycles);
-                        }
-
+                        // runs a consistencey test testult
+                        List<JourneyLinkedList> result = RunConsistencyTest(startStation, endStation);
+                        // add it to main results
+                        consistencyResults.AddRoutes(consistencyTestNum++, result, $"{startStation} - {endStation}");
                         break;
+
+                    // DISPLAY TABLE OF CONSISTENCY RESULTS
                     case 5:
                         Console.Clear();
                         consistencyResults.DisplayResultsTable();
-                        benchmarkingResults.DisplayResultsTable();
                         Console.ReadKey();
-                        
                         break;
 
+                    // BENCHMARKING TEST
                     case 6:
+                        Console.Clear();
+                        Console.WriteLine("////////////////////////////\n");
+                        Console.WriteLine("Running Benchmarking test...\n");
+                        Console.WriteLine("////////////////////////////\n");
+                        Console.WriteLine();
+
+                        // returns a BenchmarkResult object array
+                        benchmarkingResults.AddResult(RunBenchmarkTest(startStation, endStation, testCycles));
+                        break;
+
+                    // DISPLAY TABLE OF BENCHMARK RESULTS
+                    case 7:
+                        Console.Clear();
+                        benchmarkingResults.DisplayResultsTable();
+                        Console.ReadKey();
+
+                        break;
+
+                    // PRINT RESULTS TO .TXT FILE
+                    case 8:
                         Console.Clear();
                         //consistencyResults.PrintResultsTable();
                         //benchmarkingResults.PrintResultsTable();
                         Console.ReadKey();
 
+                        // EXIT
                         break;
-                    case 7:
+                    case 9:
                         exit = true;
                         break;
+
                     default:
                         Console.WriteLine("Invalid choice. Please enter 1,2,3 or 4 only");
                         Console.WriteLine("Press any key to continue...");
                         Console.ReadKey();
                         continue;
                 }
-            }  
-            
+            }
+
             // MAIN FUNCTIONS
 
-            // function to test CONSISTENCY
+            // function to test CONSISTENCY between versions
             List<JourneyLinkedList> RunConsistencyTest(string startStation, string endStation)
             {
                 // create a list to hold Versions to be tested
-                List<ITestable> testables= new List<ITestable>();
-
-                // create an List to contain the test results
-                List<JourneyLinkedList> results = new List<JourneyLinkedList>();
+                List<ITestable> testables = new List<ITestable>();
 
                 // create an instance of version 1 and add to list
                 testables.Add(new Version1());
                 // create an instance of Version 2
                 //testables.Add(new Version1());
                 // create an instance of Version 3
-                testables.Add(new Version1());
+                testables.Add(new Version3());
 
-                // run the algo with the start and finish stations to return a route for a version
+                // list to hold result from each test on a version
+                List<JourneyLinkedList> results = new List<JourneyLinkedList>();
+
+                // create a List for recording if app executed/crashed
+                List<string> miniCrashLog = new List<string>();
+
+                //// iterate through versions ////
                 foreach (ITestable version in testables)
                 {
-                    JourneyLinkedList calculatedPath = version.CalcualteShortestPath(startStation, endStation);
-                    results.Add(calculatedPath);
+                    // catch and return any error from running application
+                    try
+                    {
+                        JourneyLinkedList calculatedPath = version.CalcualteShortestPath(startStation, endStation);
+                        results.Add(calculatedPath);
+                        miniCrashLog.Add("successful");
+                    }
+                    catch (Exception e)
+                    {
+                        miniCrashLog.Add($"failed; {e.Message}");
+                    }
                 }
-                Console.WriteLine("Finsihed test");
-                Console.ReadKey(); // 
+                Console.WriteLine($"Finished test: ");
+                // print out log
+                for (int i = 0; i < miniCrashLog.Count(); i++)
+                {
+                    Console.WriteLine($"Version {i + 1} executed: {miniCrashLog[i]}");
+                }
+                Console.WriteLine($"Press any key to return to menu to see print/show results...");
+                Console.ReadKey();
                 return results;
 
             }   // end of CONSISTENCY test
 
+
             // function to return BENCHMARK result for different paths for each version
-            BenchmarkingResults RunBenchmarkTest(string startStation, string endStation, int testCycles)
+            BenchmarkResult RunBenchmarkTest(string startStation, string endStation, int testCycles)
             {
-                BenchmarkingResults resultsAll = new BenchmarkingResults();
+                // create a list to hold Versions to be tested
+                List<ITestable> testables = new List<ITestable>();
 
-                // create new stopwatches
-                Stopwatch timer = new Stopwatch();
+                // create an instance of version 1, version 2 and Version 3
+                testables.Add(new Version1());
+                // create an instance of Version 2
+                //testables.Add(new Version2());
+                // create an instance of Version 3
+                testables.Add(new Version3());
 
+                // create a new result to populate with times
+                BenchmarkResult results = new BenchmarkResult($"{startStation} to {endStation}");
 
-                // create an instance of version 1
-                Version1 version1 = new Version1();
-
-                // create an instance of version 2
-                //Version2 version2 = new Version2();
-
-                // create an instance of version 3
-                Version3 version3 = new Version3();
-                // adjacency list is generated from a .csv file
-                version3.GenerateAdjacencyList();
-
-
-                //////////////////////      will need to iterate through versions       ////////////////////////// 
-                for (int j = 1; j <= 3; j++)
+                //// iterate through versions ////
+                int versionNum = 1;
+                foreach (ITestable version in testables)
                 {
-                    // create an list to contain the test results for the route test per version
-                    List<float> resultsRoute = new List<float>();
+                    // create new stopwatch
+                    Stopwatch timer = new Stopwatch();
+
+                    // start the timer
+                    timer.Start();
 
                     // run the test the requested number of times
                     for (int i = 0; i < testCycles; i++)
                     {
-                        // start the timer for V1
-                        timer.Start();
-
                         // run the version with the start and finish stations
-                        version3.CalcualteShortestPath(startStation, endStation);
-
-                        // stop the timer for V1
-                        timer.Stop();
+                        version.CalcualteShortestPath(startStation, endStation);
                     }
+                    // stop the timer
+                    timer.Stop();
 
                     // get the timespan 
                     TimeSpan timeTaken = timer.Elapsed;
 
                     // get a float for the average per cycle
-                    float averageT = (float)timeTaken.Milliseconds / (float)testCycles;
+                    double averageT = timeTaken.TotalMilliseconds / testCycles;
 
-                    // add time taken per cycle to list
-                    resultsRoute.Add(averageT);
+                    Console.WriteLine($"Version {versionNum} finished testing in {timeTaken.TotalMilliseconds / 1000} seconds...");
 
-                    Console.WriteLine($"Route to test: {startStation} to {endStation}, {testCycles} cycles");
-                    Console.WriteLine($"=================================================================");
-                    Console.WriteLine($"Version 3: execution time per cycle: {averageT} ms");
-                    Console.WriteLine($"-----------------------------------------------------------------");
+                    // add time taken per cycle to dictionary
+                    results.AddTime(versionNum, averageT);
+                    versionNum++;
 
-                    // add result to the main results 
-                    resultsAll.AddResult(startStation, endStation, resultsRoute);
+
+                    // timer reset
+                    timer.Reset();
                 }
 
-                // wait for key press
+                Console.WriteLine($"Press any key to return to menu to see print/show results...");
                 Console.ReadKey();
-                return resultsAll;
+                return results;
 
             }   // end of BENCHMARK test
 
@@ -248,7 +253,7 @@ namespace Testing
             // function to select a valid station
             void SelectStation()
             {
-                while(true)
+                while (true)
                 {
                     Console.WriteLine("Input start Station:");
                     startStation = Console.ReadLine();
@@ -285,7 +290,7 @@ namespace Testing
 
             // function to create Stations Dictionary
             void PopulateStationsDictionay()
-            { 
+            {
 
                 // reading csv file and instantiating objects to pass into dictionary
                 using (var reader = new StreamReader("stations3.csv"))

@@ -4,15 +4,13 @@
  * Tutorial Exercises: Heaps - MinHeap class uses HeapItem class
  */
 
-using System;
-
 namespace Testing
 {
     public class MinHeap
     {
         private const int initialCapacity = 100;
         private const int noSwapChild = -1;
-        private const HeapItem emptySlot = null;     
+        private const HeapItem emptySlot = null;
         private int Capacity = initialCapacity;     // set the intial capacity 
         private HeapItem[] heap;                    // array of HeapItems - the Heap itself
         private int size = 0;                       // number of items in the heap  
@@ -35,7 +33,7 @@ namespace Testing
             {
                 heap[i] = emptySlot;
             }
-        }      
+        }
         // mapping the child to the parent
         public static int parentIndex(int index)
         {
@@ -51,7 +49,7 @@ namespace Testing
         {
             return ((2 * index) + 2);
         }
-        public void Insert(HeapItem newItem)  
+        public void Insert(HeapItem newItem)
         {
             if (size == Capacity)
             {
@@ -193,6 +191,6 @@ namespace Testing
         //}
 
 
-    } 
+    }
 
-} 
+}

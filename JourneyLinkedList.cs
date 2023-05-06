@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Testing
+﻿namespace Testing
 {
     public class JourneyLinkedList
     {
         // fields
-        private string name;
+        private string versionName;
         private int walkTime;
         private Journey? head;
 
         public JourneyLinkedList(string name)
         {
-            this.name = name;
+            versionName = name;
         }
 
         // method to add to the end of the linked list
@@ -35,6 +32,10 @@ namespace Testing
             // add next journey to list
             current.AddNext(journey);
         }
+        public int GetWalkTime()
+        {
+            return walkTime;
+        }
         public void AddWalkTime(int time)
         {
             this.walkTime = time;
@@ -43,9 +44,10 @@ namespace Testing
         // display journey calculated from different versions and walk times
         public void DisplayAll()
         {
-            // show route being calculated
-            Console.WriteLine($"Route: {name}");
-            Console.WriteLine($"==================================");
+            // print out route to console
+            Console.WriteLine();
+            Console.WriteLine($"{versionName}: calculated shortest route is a {walkTime} min walk");
+            Console.WriteLine($"-----------------------------------------------------------------");
 
             // keep track of current node
             Journey? current = this.head;
@@ -56,10 +58,7 @@ namespace Testing
                 Console.WriteLine($"{current.GetStart()} - {current.GetEnd()} ({current.GetTime()}) mins");
                 current = current.GetNext();
             }
-
-            // display total time to walk
-            Console.WriteLine($"\nTime to walk: {this.walkTime}");
-            Console.WriteLine($"==================================");
+            Console.WriteLine($"-----------------------------------------------------------------\n");
         }
 
     }

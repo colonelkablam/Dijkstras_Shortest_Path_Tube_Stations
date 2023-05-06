@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Testing;
-
-namespace Testing
+﻿namespace Testing
 {
     public class Version3 : ITestable
     {
@@ -109,7 +100,7 @@ namespace Testing
                 {
                     break;
                 }
-                
+
 
                 // O of 1
                 queue.Remove(currentStation);
@@ -131,8 +122,8 @@ namespace Testing
             var path = new LinkedList<Station>();
             var current = endStation;
 
-            /////// testing data collection
-            JourneyLinkedList route = new JourneyLinkedList($"{start} to {end}");
+            /////// testing - create JourneyLinkedList for data collection
+            JourneyLinkedList route = new JourneyLinkedList("Version 3");
 
             // big O of N
             while (current != null)
@@ -158,7 +149,7 @@ namespace Testing
 
                     /////// testing - add 'step' between stations to the overall journey
                     route.AddJourney(new Journey(previousStation.Name, station.Name, neighbour.Item3));
-                    
+
                     totalTime += neighbour.Item3;
                 }
                 currentLine = station.Line;

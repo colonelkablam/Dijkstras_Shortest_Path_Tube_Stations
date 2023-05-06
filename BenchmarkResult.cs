@@ -1,35 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Testing
+﻿namespace Testing
 {
     // create a result for a test of benchmarking times on a particular route
     public class BenchmarkResult
     {
         // fields
         private string route;
-        private List<float> times;
+        private Dictionary<int, double> times;
 
         // structure to contain a result of a benchmark test
-        public BenchmarkResult(string start, string end, List<float> times)
+        public BenchmarkResult(string route)
         {
-            this.route = $"{start} - {end}"; // start and end stations as a string
-            this.times = times; // add the times list
+            this.times = new Dictionary<int, double>();  // add the times list
+            this.route = route;
         }
 
-        // return the route string
-        public string GetRoute()
+        // add a time to the list
+        public void AddTime(int version, double time)
         {
-            return route;
+            times.Add(version, time);
         }
 
         // return the time from a particular element
-        public List<float> GetTimes()
+        public void DisplayTimes()
         {
-            return times;
+            Console.WriteLine($"Route: {route}");
+            for (int i = 1; i <= times.Count(); i++)
+            {
+                Console.WriteLine($"Version {i}: average time taken per cycle: {times[i]}");
+            }
+            Console.WriteLine();
         }
 
     }

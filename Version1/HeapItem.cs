@@ -3,9 +3,6 @@
  * Tutorial Exercises: Heaps - HeapItem class
  */
 
-using System;
-
-
 namespace Testing
 {
     public class HeapItem
@@ -30,8 +27,8 @@ namespace Testing
         {
             return value;
         }
-        
 
-    } 
 
-} 
+    }
+
+}

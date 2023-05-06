@@ -1,5 +1,4 @@
-﻿using System;
-//using System.Collections.Generic;
+﻿//using System.Collections.Generic;
 
 namespace Testing
 {
@@ -36,7 +35,7 @@ namespace Testing
         {
             this.stationID = stationID;
             this.stationName = stationName;
-            this.tubeLines = new string[] { tubeline1, tubeline2, tubeline3 , tubeline4 };
+            this.tubeLines = new string[] { tubeline1, tubeline2, tubeline3, tubeline4 };
         }
 
         public TubeStation(int stationID, string stationName, string tubeline1, string tubeline2, string tubeline3, string tubeline4, string tubeline5, string tubeline6)
@@ -108,7 +107,7 @@ namespace Testing
 
         //    int sourceID = TubeStation.GetStationIDByName(stations, stationName);
 
-            
+
 
         //    TubeStation station = stations[sourceID];
         //    return station;

@@ -5,9 +5,6 @@
  * Used for heap exceptions, e.g. extracting from an empty heap
  */
 
-using System;
-
-
 namespace Testing
 {
     public class HeapException : Exception

@@ -1,8 +1,4 @@
-﻿using System;
-//using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//using System.Collections.Generic;
 
 namespace Testing
 {
@@ -13,7 +9,7 @@ namespace Testing
         private int WalkingTime;
         private string TubeLine;
 
-       
+
 
         public TubeEdge(TubeStation source, TubeStation destination, int walkingTime)
         {
