@@ -9,26 +9,28 @@ namespace Testing
 {
     public class ConsistencyResults
     {
-        private List<string> pathsTaken;
-        private string route;
+        private List<JourneyLinkedList> routesTaken;
 
         public ConsistencyResults() 
         {
             // default results
-            pathsTaken = new List<string>();
-            route = string.Empty;
+            routesTaken = new List<JourneyLinkedList>();
         }
 
-        // get station path
-        public List<string> GetPathsTaken()
+        // Add route
+        public void AddRoute(JourneyLinkedList route)
         {
-            return pathsTaken;
+            routesTaken.Add(route);
         }
 
-        // get route 
-        public string GetRoute()
+        // Get route 
+        public void DisplayRoutes()
         {
-            return route;
+            foreach (JourneyLinkedList route in routesTaken)
+            {
+                route.DisplayAll();
+            }
+            
         }
     }
 }

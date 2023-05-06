@@ -67,11 +67,10 @@ namespace Testing
                 }
             } // end of Using StreamReader
 
-
-
         } // end of generating the adjacency list
 
-        public string CalcualteShortestPath(string start, string end)
+        // main Dijkstra's implementation
+        public JourneyLinkedList CalcualteShortestPath(string start, string end)
         {
             Station startStation = stations[start];
             Station endStation = stations[end];
@@ -133,7 +132,8 @@ namespace Testing
 
             // initialise a string builder to record output of algo1
             /////// testing output
-            StringBuilder pathString = new StringBuilder();  
+            StringBuilder pathString = new StringBuilder();
+            JourneyLinkedList route = new JourneyLinkedList($"{startStation} to {endStation}");
 
             // big O of N
             while (current != null)
@@ -145,7 +145,7 @@ namespace Testing
             {
                 /////// testing output
                 pathString.Append("No path found");
-                return pathString.ToString();
+                return route;
             }
 
             var previousStation = default(Station);
@@ -159,7 +159,8 @@ namespace Testing
                     var neighbour = station.Neighbours.First(n => n.Item1 == previousStation);
 
                     /////// testing output
-                    pathString.Append($"{previousStation.Name}  ->  {station.Name}  ({neighbour.Item3}mins)\n"); 
+                    pathString.Append($"{previousStation.Name}  ->  {station.Name}  ({neighbour.Item3}mins)\n");
+                    route.AddJourney(new Journey(previousStation.Name, station.Name, neighbour.Item3));
                     
                     totalTime += neighbour.Item3;
                 }
@@ -169,9 +170,10 @@ namespace Testing
 
             /////// testing output
             pathString.Append($"\nTotal walk time {totalTime} mins");
+            route.AddWalkTime(totalTime);
 
             // return the path as string
-            return pathString.ToString();
+            return route;
 
         } // end of CalculateShortestPath
     }

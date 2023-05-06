@@ -145,17 +145,19 @@ namespace Testing
                 version3.GenerateAdjacencyList();
 
                 // initialise return string representing path
-                string calculatedPath = "no path returned by Version";
+
+                JourneyLinkedList calculatedPath = null;
 
                 // run the algo with the start and finish stations
                 calculatedPath = version3.CalcualteShortestPath(startStation, endStation);
 
+               /*
                 Console.WriteLine($"Route to test: {startStation} to {endStation}");
                 Console.WriteLine($"===============================================");
                 Console.WriteLine($"Version 3:");
                 Console.WriteLine($"{calculatedPath}");
                 Console.WriteLine($"---------------------------------------------");
-
+                */
                 Console.ReadKey();
                 return results;
 
