@@ -25,6 +25,10 @@
         // Get route 
         public void DisplayResultsTable()
         {
+            if (routesTaken.Count() == 0)
+            {
+                Console.WriteLine($"               - no results -");
+            }
             // iterate through version numbers (dictionary length is the number of diff routes tested)
             for (int i = 1; i <= routesTaken.Count(); i++)
             {

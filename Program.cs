@@ -27,11 +27,11 @@ namespace Testing
             testables.Add(new Version3(3));
 
             // start and finish default stations
-            string startStation = "Edgware Road (Circle Line)";
+            string startStation = "Kings Cross St Pancras";
             string endStation = "Paddington";
 
-            // number of tests to run
-            int testCycles = 1;
+            // number of tests to run default
+            int testCycles = 1000;
 
             BenchmarkingResults benchmarkingResults = new BenchmarkingResults();
             ConsistencyResults consistencyResults = new ConsistencyResults();
@@ -61,15 +61,15 @@ namespace Testing
                 Console.WriteLine("6. Run a BENCHMARKING test");
                 Console.WriteLine("7.   - Display ALL results");
                 Console.WriteLine();
-                Console.WriteLine("8. Print results tables to .txt file");
+                Console.WriteLine("8. Print results tables to txt file");
                 Console.WriteLine("9. Clear results");
-                Console.WriteLine("0. Exit");
+                Console.WriteLine("10. Exit");
                 Console.WriteLine();
                 Console.WriteLine($"Current Settings:");
                 Console.WriteLine($"  start:\t{startStation}\n  end:\t\t{endStation}");
                 Console.WriteLine($"  test cycles:\t{testCycles}");
                 Console.WriteLine();
-                Console.Write("Enter your choice (1-9): ");
+                Console.Write("Enter your choice (1-10): ");
 
                 // read user selection
                 int selection;
@@ -159,7 +159,7 @@ namespace Testing
                         break;
 
                     // EXIT
-                    case 0:
+                    case 10:
                         exit = true;
                         break;
 
@@ -307,8 +307,8 @@ namespace Testing
             void InputNumberOfTests()
             {
                 int input;
-                Console.WriteLine("Please enter an number between 1000 - 1000000: ");
-                if (int.TryParse(Console.ReadLine(), out input) & (input >= 1000 && input <= 1000000))
+                Console.WriteLine("Please enter an number between 1 - 1,000,000: ");
+                if (int.TryParse(Console.ReadLine(), out input) & (input >= 1 && input <= 1000000))
                 {
                     testCycles = input;
                 }
@@ -329,7 +329,7 @@ namespace Testing
                         string stationName1 = values[1];
                         string stationName2 = values[2];
 
-                        // check both
+                        // check both from and to stations in csv to get all names
                         if (!stations.Contains(stationName1))
                         {
                             stations.Add(stationName1);
