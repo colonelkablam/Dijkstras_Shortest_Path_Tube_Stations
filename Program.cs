@@ -1,5 +1,9 @@
 ﻿using System.Diagnostics;  // StopWatch + TimeSpan
 
+// Nick Harding w19249722 UoW DSaA Courswork
+// May 2023
+// Testing and benchmarking program
+
 namespace Testing
 {
     public class Program
@@ -10,15 +14,24 @@ namespace Testing
 
             // List to hold all stations names
             List<string> stations = new List<string>();
+
             // call function to populate stations dictionary from csv file
             PopulateStationsList();
 
+            // create a list to hold Versions to be tested
+            List<ITestable> testables = new List<ITestable>();
+
+            // create an instance of version 1,2 and 3 and add to ITestable list
+            testables.Add(new Version1(1));
+            testables.Add(new Version2(2));
+            testables.Add(new Version3(3));
+
             // start and finish default stations
-            string startStation = "Vauxhall";
+            string startStation = "Edgware Road (Circle Line)";
             string endStation = "Paddington";
 
             // number of tests to run
-            int testCycles = 100;
+            int testCycles = 1;
 
             BenchmarkingResults benchmarkingResults = new BenchmarkingResults();
             ConsistencyResults consistencyResults = new ConsistencyResults();
@@ -139,6 +152,7 @@ namespace Testing
                     case 9:
                         benchmarkingResults = new BenchmarkingResults();
                         consistencyResults = new ConsistencyResults();
+                        consistencyTestNum = 0;
                         Console.Clear();
                         Console.WriteLine("Results tables cleared, press any key to return to main menu...");
                         Console.ReadKey();
@@ -162,14 +176,6 @@ namespace Testing
             // function to test CONSISTENCY between versions
             List<JourneyLinkedList> RunConsistencyTest(string startStation, string endStation)
             {
-                // create a list to hold Versions to be tested
-                List<ITestable> testables = new List<ITestable>();
-
-                // create an instance of version 1 and add to list
-                testables.Add(new Version1(1));
-                testables.Add(new Version1(2));
-                testables.Add(new Version3(3));
-
                 // list to hold result from each test on a version
                 List<JourneyLinkedList> results = new List<JourneyLinkedList>();
 
@@ -207,14 +213,6 @@ namespace Testing
             // function to return BENCHMARK result for different paths for each version
             BenchmarkResult RunBenchmarkTest(string startStation, string endStation, int testCycles)
             {
-                // create a list to hold Versions to be tested
-                List<ITestable> testables = new List<ITestable>();
-
-                // create an instance of version 1, version 2 and Version 3
-                testables.Add(new Version1(1));
-                testables.Add(new Version2(2));
-                testables.Add(new Version3(3));
-
                 // create a new result to populate with times
                 BenchmarkResult results = new BenchmarkResult($"{startStation} to {endStation}");
 
