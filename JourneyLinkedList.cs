@@ -3,16 +3,17 @@
     public class JourneyLinkedList
     {
         // fields
-        private string versionName;
+        private int version;
         private int walkTime;
         private Journey? head;
 
-        public JourneyLinkedList(string name)
+        public JourneyLinkedList(int version)
         {
-            versionName = name;
+            walkTime = -1;
+            this.version = version;
         }
 
-        // method to add to the end of the linked list
+        // Add to the end of the linked list
         public void AddJourney(Journey journey)
         {
             // if empty list then add journey as head
@@ -43,13 +44,17 @@
 
         // display journey calculated from different versions and walk times
         public void DisplayAll()
-        {
+        {   
             // print out route to console
             Console.WriteLine();
-            Console.WriteLine($"{versionName}: calculated shortest route is a {walkTime} min walk");
+            Console.WriteLine($"Version {version}: calculated shortest route is a {walkTime} min walk");
             Console.WriteLine($"------------------------------------------------------");
+
+            // if empty a default journey added
+            if (this.head == null) this.AddJourney(new Journey());
+
             // keep track of current node
-            Journey ? current = this.head;
+            Journey? current = this.head;
 
             // keep going until the end!
             while (current != null)

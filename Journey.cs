@@ -7,6 +7,14 @@
         private int time;
         private Journey? nextJourney;
 
+        // constructors
+        public Journey()
+        {
+            this.start = "no result";
+            this.end = "no result";
+            this.time = -1;
+            this.nextJourney = null;
+        }
         public Journey(string start, string end, int time)
         {
             this.start = start;

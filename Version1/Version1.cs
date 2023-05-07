@@ -252,7 +252,7 @@
             // Display the shortest path
 
             ///// testing - cerate JourneyLinkedList to collect route ////
-            JourneyLinkedList route = new JourneyLinkedList("Version 1");
+            JourneyLinkedList route = new JourneyLinkedList(VersionNumber);
 
             TubeEdge[] pathArray = new TubeEdge[100];
             int pathIndex = 0;

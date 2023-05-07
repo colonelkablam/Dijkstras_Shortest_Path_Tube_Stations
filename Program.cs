@@ -186,6 +186,8 @@ namespace Testing
                     }
                     catch (Exception e)
                     {
+                        JourneyLinkedList failedPath = new JourneyLinkedList(version.VersionNumber);
+                        results.Add(failedPath);
                         Console.WriteLine($"Version {version.VersionNumber} execution: failed");
                         Console.WriteLine($"error message: {e.Message}");
                     }

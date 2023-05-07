@@ -130,7 +130,7 @@
             var current = endStation;
 
             /////// testing - create JourneyLinkedList for data collection
-            JourneyLinkedList route = new JourneyLinkedList("Version 3");
+            JourneyLinkedList route = new JourneyLinkedList(VersionNumber);
 
             // big O of N
             while (current != null)
