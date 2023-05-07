@@ -24,9 +24,9 @@
             // iterate through version numbers (dictionary length is the number of diff routes tested)
             for (int i = 0; i < results.Count(); i++)
             {
-                Console.WriteLine($"=================================================================");
-                Console.WriteLine($"                    Test number {i + 1}");
-                Console.WriteLine($"=================================================================");
+                Console.WriteLine($"======================================================");
+                Console.WriteLine($"            *** Test number {i + 1} ***");
+                Console.WriteLine($"======================================================");
 
                 // display version being displayed
                 results[i].DisplayTimes();

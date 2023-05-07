@@ -28,9 +28,9 @@
             // iterate through version numbers (dictionary length is the number of diff routes tested)
             for (int i = 1; i <= routesTaken.Count(); i++)
             {
-                Console.WriteLine($"");
-                Console.WriteLine($"Test Number {i}:  {testRoute[i - 1]}");
-                Console.WriteLine($"#################################################");
+                Console.WriteLine($"======================================================");
+                Console.WriteLine($" Test Number {i}:  {testRoute[i - 1]}");
+                Console.WriteLine($"======================================================");
 
                 // interate through the different versions
                 for (int j = 0; j < routesTaken[i].Count(); j++)

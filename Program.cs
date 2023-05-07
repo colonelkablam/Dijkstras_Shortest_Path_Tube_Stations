@@ -25,9 +25,6 @@ namespace Testing
             ConsistencyResults consistencyResults = new ConsistencyResults();
             int consistencyTestNum = 1;
 
-            PrintStations();
-            Console.ReadKey();
-
             // start the menu
             bool exit = false;
 
@@ -44,20 +41,21 @@ namespace Testing
                 Console.WriteLine();
                 Console.WriteLine("1. Change the START station");
                 Console.WriteLine("2. Change the END station");
-                Console.WriteLine("3. Change number of test cycles for BENCHMARKING");
+                Console.WriteLine("3. Change number of test cycles");
                 Console.WriteLine();
-                Console.WriteLine("4. Run CONSISTENCY test");
-                Console.WriteLine("5. Display table of results");
+                Console.WriteLine("4. Run a CONSISTENCY test");
+                Console.WriteLine("5.   - Display ALL results");
                 Console.WriteLine();
-                Console.WriteLine("6. Run BENCHMARK test");
-                Console.WriteLine("7. Display table of results");
+                Console.WriteLine("6. Run a BENCHMARKING test");
+                Console.WriteLine("7.   - Display ALL results");
                 Console.WriteLine();
-                Console.WriteLine("8. Print results of tests");
-                Console.WriteLine("9. Exit");
+                Console.WriteLine("8. Print results tables to .txt file");
+                Console.WriteLine("9. Clear results");
+                Console.WriteLine("0. Exit");
                 Console.WriteLine();
                 Console.WriteLine($"Current Settings:");
-                Console.WriteLine($"start:\t\t{startStation}\nend:\t\t{endStation}");
-                Console.WriteLine($"iterations:\t{testCycles}");
+                Console.WriteLine($"  start:\t{startStation}\n  end:\t\t{endStation}");
+                Console.WriteLine($"  test cycles:\t{testCycles}");
                 Console.WriteLine();
                 Console.Write("Enter your choice (1-9): ");
 
@@ -90,7 +88,6 @@ namespace Testing
                         Console.WriteLine("////////////////////////////\n");
                         Console.WriteLine("Running Consistency test...\n");
                         Console.WriteLine("////////////////////////////\n");
-                        Console.WriteLine();
 
                         // runs a consistencey test testult
                         List<JourneyLinkedList> result = RunConsistencyTest(startStation, endStation);
@@ -105,6 +102,7 @@ namespace Testing
                     case 5:
                         Console.Clear();
                         consistencyResults.DisplayResultsTable();
+                        Console.WriteLine($"\nPress any key to return to the main menu...");
                         Console.ReadKey();
                         break;
 
@@ -114,7 +112,6 @@ namespace Testing
                         Console.WriteLine("////////////////////////////\n");
                         Console.WriteLine("Running Benchmarking test...\n");
                         Console.WriteLine("////////////////////////////\n");
-                        Console.WriteLine();
 
                         // returns a BenchmarkResult object array
                         benchmarkingResults.AddResult(RunBenchmarkTest(startStation, endStation, testCycles));
@@ -127,8 +124,8 @@ namespace Testing
                     case 7:
                         Console.Clear();
                         benchmarkingResults.DisplayResultsTable();
+                        Console.WriteLine($"\nPress any key to return to the main menu...");
                         Console.ReadKey();
-
                         break;
 
                     // PRINT RESULTS TO .TXT FILE
@@ -137,10 +134,19 @@ namespace Testing
                         //consistencyResults.PrintResultsTable();
                         //benchmarkingResults.PrintResultsTable();
                         Console.ReadKey();
-
-                        // EXIT
                         break;
+
+                    // CLEAR RESULTS
                     case 9:
+                        benchmarkingResults = new BenchmarkingResults();
+                        consistencyResults = new ConsistencyResults();
+                        Console.Clear();
+                        Console.WriteLine("Results tables cleared, press any key to return to main menu...");
+                        Console.ReadKey();
+                        break;
+
+                    // EXIT
+                    case 0:
                         exit = true;
                         break;
 
@@ -183,9 +189,11 @@ namespace Testing
                         Console.WriteLine($"Version {version.VersionNumber} execution: failed");
                         Console.WriteLine($"error message: {e.Message}");
                     }
+                    Console.WriteLine();
                 }
                 Console.WriteLine($"Press any key to see the results:\n");
                 Console.ReadKey();
+                Console.Clear();
                 foreach (JourneyLinkedList route in results)
                 {
                     route.DisplayAll();
@@ -214,6 +222,8 @@ namespace Testing
                 {
                     // initialise a default time (to catch invalid result)
                     double averageTime = -1;
+                    // progress monitoring
+                    double progress = 0;
 
                     // catch and return any error from running application
                     try
@@ -233,13 +243,9 @@ namespace Testing
                             // stop the timer
                             timer.Stop();
 
-                            double progress = 1 + (100 / testCycles) * i;
-                            // display a progress 'bar'
-                            if ((int)(progress) % 5 == 0)
-                            {
-                                Console.Write(".");
-                            }
-
+                            // calculate and display progress
+                            progress = (1 / (double)testCycles) * (i+1);
+                            Console.Write($"\rProgress: {progress.ToString("P2")}   ");
                         }
 
                         // get the timespan 
@@ -248,24 +254,26 @@ namespace Testing
                         // get a float for the average per cycle
                         averageTime = timeTaken.TotalMilliseconds / testCycles;
 
-                        Console.WriteLine($"Version {version.VersionNumber} execution: successful");
-                        Console.WriteLine($"finished testing in {timeTaken.TotalSeconds} seconds...");
+                        Console.WriteLine();
+                        Console.WriteLine($"\nVersion {version.VersionNumber} execution: successful");
+                        Console.WriteLine($"finished testing in {timeTaken.TotalSeconds.ToString("F2")} seconds...");
 
                         // add time taken per cycle to dictionary
                         results.AddTime(version.VersionNumber, averageTime);
                     }
                     catch (Exception e)
                     {
+                        Console.WriteLine();
                         Console.WriteLine($"Version {version.VersionNumber} execution: failed");
                         Console.WriteLine($"error message: {e.Message}");
                         results.AddTime(version.VersionNumber, averageTime);
-
                     } // end of try/catch exception
+                    Console.WriteLine();
 
                 } // end of iteration through vaersions
-
                 Console.WriteLine($"Press any key to see the results:\n");
                 Console.ReadKey();
+                Console.Clear();
                 results.DisplayTimes();
                 return results;
 
@@ -278,10 +286,15 @@ namespace Testing
                 string selection;
                 while (true)
                 {
-                    Console.WriteLine("Input Station:");
+                    Console.WriteLine("Input Station (type 'list' to see stations):");
                     string input = Console.ReadLine();
 
-                    if (stations.Contains(input))
+                    if (input == "list")
+                    {
+                        PrintStations();
+                        continue;
+                    }
+                    else if(stations.Contains(input))
                     {
                         selection = input;
                         break;

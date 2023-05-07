@@ -47,10 +47,9 @@
             // print out route to console
             Console.WriteLine();
             Console.WriteLine($"{versionName}: calculated shortest route is a {walkTime} min walk");
-            Console.WriteLine($"-----------------------------------------------------------------");
-
+            Console.WriteLine($"------------------------------------------------------");
             // keep track of current node
-            Journey? current = this.head;
+            Journey ? current = this.head;
 
             // keep going until the end!
             while (current != null)
@@ -58,7 +57,7 @@
                 Console.WriteLine($"{current.GetStart()} - {current.GetEnd()} ({current.GetTime()}) mins");
                 current = current.GetNext();
             }
-            Console.WriteLine($"-----------------------------------------------------------------\n");
+            Console.WriteLine($"------------------------------------------------------");
         }
 
     }
