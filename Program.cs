@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;  // StopWatch + TimeSpan
-using System.Linq;
 
 namespace Testing
 {
@@ -168,7 +167,7 @@ namespace Testing
 
                 // create an instance of version 1 and add to list
                 testables.Add(new Version1(1));
-                //testables.Add(new Version1());
+                testables.Add(new Version1(2));
                 testables.Add(new Version3(3));
 
                 // list to hold result from each test on a version
@@ -213,7 +212,7 @@ namespace Testing
 
                 // create an instance of version 1, version 2 and Version 3
                 testables.Add(new Version1(1));
-                //testables.Add(new Version2());
+                testables.Add(new Version2(2));
                 testables.Add(new Version3(3));
 
                 // create a new result to populate with times
@@ -328,11 +327,18 @@ namespace Testing
                         var line = reader.ReadLine();
                         var values = line.Split(',');
                         // names taken from csv file used to populate adjacency lists of app versions
-                        string stationName = values[1];
+                        // need to and from stations (due to the format of the csv file
+                        string stationName1 = values[1];
+                        string stationName2 = values[2];
 
-                        if (!stations.Contains(stationName))
+                        // check both
+                        if (!stations.Contains(stationName1))
                         {
-                            stations.Add(stationName);
+                            stations.Add(stationName1);
+                        }
+                        if (!stations.Contains(stationName2))
+                        {
+                            stations.Add(stationName2);
                         }
 
                     }

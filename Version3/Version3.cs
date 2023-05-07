@@ -22,52 +22,6 @@
             GenerateAdjacencyList();
         }
 
-        // generates the adjacency list 
-        public void GenerateAdjacencyList()
-        {
-            using (var reader = new StreamReader("stations3.csv"))
-            {
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-                    var values = line.Split(',');
-
-                    string lineName = values[0];
-                    string fromName = values[1];
-                    string toName = values[2];
-                    int time = int.Parse(values[3]);
-
-                    Station fromStation, toStation;
-
-                    // Check to make sure we don't get separate stations for (eg. bakerloo oxford st and central oxford st)
-                    if (!stations.ContainsKey(fromName))
-                    {
-                        fromStation = new Station(fromName);
-                        stations[fromName] = fromStation;
-                    }
-                    else
-                    {
-                        fromStation = stations[fromName];
-                    }
-
-                    if (!stations.ContainsKey(toName))
-                    {
-                        toStation = new Station(toName);
-                        stations[toName] = toStation;
-                    }
-                    else
-                    {
-                        toStation = stations[toName];
-                    }
-
-                    // Add the connection between the two stations
-                    fromStation.Neighbours.AddLast((toStation, lineName, time));
-                    toStation.Neighbours.AddLast((fromStation, lineName, time));
-                }
-            } // end of Using StreamReader
-
-        } // end of generating the adjacency list
-
         // main Dijkstra's implementation
         public JourneyLinkedList CalcualteShortestPath(string start, string end)
         {
@@ -170,5 +124,53 @@
             return route;
 
         } // end of CalculateShortestPath
+
+
+        // generates the adjacency list 
+        public void GenerateAdjacencyList()
+        {
+            using (var reader = new StreamReader("stations3.csv"))
+            {
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var values = line.Split(',');
+
+                    string lineName = values[0];
+                    string fromName = values[1];
+                    string toName = values[2];
+                    int time = int.Parse(values[3]);
+
+                    Station fromStation, toStation;
+
+                    // Check to make sure we don't get separate stations for (eg. bakerloo oxford st and central oxford st)
+                    if (!stations.ContainsKey(fromName))
+                    {
+                        fromStation = new Station(fromName);
+                        stations[fromName] = fromStation;
+                    }
+                    else
+                   
+                    {
+                        fromStation = stations[fromName];
+                    }
+
+                    if (!stations.ContainsKey(toName))
+                    {
+                        toStation = new Station(toName);
+                        stations[toName] = toStation;
+                    }
+                    else
+                    {
+                        toStation = stations[toName];
+                    }
+
+                    // Add the connection between the two stations
+                    fromStation.Neighbours.AddLast((toStation, lineName, time));
+                    toStation.Neighbours.AddLast((fromStation, lineName, time));
+                }
+            } // end of Using StreamReader
+
+        } // end of generating the adjacency list
     }
 }
