@@ -7,10 +7,17 @@
         // Dictionary to hold all stations, names = keys, station = station
         private Dictionary<string, Station> stations;
 
+        // Property
+        //// ITesable - name needed for testing ////
+        public int VersionNumber { get; }
+
+
 
         // constructor
-        public Version3()
+        public Version3(int version)
         {
+            //// ITestable - initialise name ////
+            VersionNumber = version;
             stations = new Dictionary<string, Station>();
             GenerateAdjacencyList();
         }

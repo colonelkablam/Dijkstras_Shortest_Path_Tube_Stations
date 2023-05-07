@@ -9,9 +9,15 @@
         RouteStatus[] routeStatusArray = new RouteStatus[100];
         int routeStatusCount = 0;
 
+        //// ITestable name added ////
+        public int VersionNumber { get; }
+
         // constructor
-        public Version1()
+        public Version1(int version)
         {
+            //// ITestable - initialise name ////
+            VersionNumber = version;
+
             stations = new TubeStation[]
             {
                 new TubeStation(0, "Elephant and Castle", "Bakerloo" , "Northern"),
@@ -245,7 +251,7 @@
 
             // Display the shortest path
 
-            /////// testing - cerate JourneyLinkedList to collect route
+            ///// testing - cerate JourneyLinkedList to collect route ////
             JourneyLinkedList route = new JourneyLinkedList("Version 1");
 
             TubeEdge[] pathArray = new TubeEdge[100];
@@ -277,7 +283,7 @@
 
                 //Console.WriteLine($"{currentEdge.GetSource().GetStationName()} to {currentEdge.GetDestination().GetStationName()} ({currentEdge.GetWalkingTime()} min) on {currentEdge.GetTubeLine()} Line");
 
-                /////// testing - add 'step' between stations to the overall journey
+                ///// testing - add 'step' between stations to the overall journey ////
                 route.AddJourney(new Journey(currentEdge.GetSource().GetStationName(), currentEdge.GetDestination().GetStationName(), currentEdge.GetWalkingTime()));
 
                 previousLine = currentLine;
@@ -287,7 +293,7 @@
             Console.WriteLine($"Total journey time: {totalJourneyTime} minutes");
             */
 
-            /////// testing - add total time to JourneyLinkedList
+            //// testing - add total time to JourneyLinkedList ////
             route.AddWalkTime(totalJourneyTime);
 
             // return route to call

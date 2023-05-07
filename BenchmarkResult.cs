@@ -24,9 +24,9 @@
         public void DisplayTimes()
         {
             Console.WriteLine($"Route: {route}");
-            for (int i = 1; i <= times.Count(); i++)
+            foreach (var time in times.OrderBy(x => x.Key))
             {
-                Console.WriteLine($"Version {i}: average time taken per cycle: {times[i]}");
+                Console.WriteLine($"Version {time.Key}: average time taken per cycle: {time.Value}");
             }
             Console.WriteLine();
         }

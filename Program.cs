@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;  // StopWatch + TimeSpan
+using System.Linq;
 
 namespace Testing
 {
@@ -8,26 +9,29 @@ namespace Testing
         {
             /////////////// MEGA-TESTING PROG ///////////////////            
 
-            // Dictionary to hold all stations, names = keys, station = station
-            Dictionary<string, Station> stations = new Dictionary<string, Station>();
+            // List to hold all stations names
+            List<string> stations = new List<string>();
             // call function to populate stations dictionary from csv file
-            PopulateStationsDictionay();
+            PopulateStationsList();
 
             // start and finish default stations
             string startStation = "Vauxhall";
             string endStation = "Paddington";
 
             // number of tests to run
-            int testCycles = 100000;
+            int testCycles = 100;
 
             BenchmarkingResults benchmarkingResults = new BenchmarkingResults();
             ConsistencyResults consistencyResults = new ConsistencyResults();
             int consistencyTestNum = 1;
 
+            PrintStations();
+            Console.ReadKey();
+
             // start the menu
             bool exit = false;
 
-            // main program loop to get inputs and run test
+            // menu loop to get inputs and run tests
             while (exit == false)
             {
                 Console.Clear();
@@ -66,12 +70,12 @@ namespace Testing
                     // CHANGE START STATION
                     case 1:
                         Console.Clear();
-                        SelectStation();
+                        startStation = SelectStation();
                         break;
                     // CHANGE END STATION
                     case 2:
                         Console.Clear();
-                        SelectStation();
+                        endStation = SelectStation();
                         break;
 
                     // CHANGE NUMBER OF TEST CYCLES
@@ -92,6 +96,9 @@ namespace Testing
                         List<JourneyLinkedList> result = RunConsistencyTest(startStation, endStation);
                         // add it to main results
                         consistencyResults.AddRoutes(consistencyTestNum++, result, $"{startStation} - {endStation}");
+                        
+                        Console.WriteLine($"\nPress any key to return to the main menu...");
+                        Console.ReadKey();
                         break;
 
                     // DISPLAY TABLE OF CONSISTENCY RESULTS
@@ -111,6 +118,9 @@ namespace Testing
 
                         // returns a BenchmarkResult object array
                         benchmarkingResults.AddResult(RunBenchmarkTest(startStation, endStation, testCycles));
+                        
+                        Console.WriteLine($"\nPress any key to return to the main menu...");
+                        Console.ReadKey();
                         break;
 
                     // DISPLAY TABLE OF BENCHMARK RESULTS
@@ -140,7 +150,7 @@ namespace Testing
                         Console.ReadKey();
                         continue;
                 }
-            }
+            } // end of menu loop
 
             // MAIN FUNCTIONS
 
@@ -151,17 +161,12 @@ namespace Testing
                 List<ITestable> testables = new List<ITestable>();
 
                 // create an instance of version 1 and add to list
-                testables.Add(new Version1());
-                // create an instance of Version 2
+                testables.Add(new Version1(1));
                 //testables.Add(new Version1());
-                // create an instance of Version 3
-                testables.Add(new Version3());
+                testables.Add(new Version3(3));
 
                 // list to hold result from each test on a version
                 List<JourneyLinkedList> results = new List<JourneyLinkedList>();
-
-                // create a List for recording if app executed/crashed
-                List<string> miniCrashLog = new List<string>();
 
                 //// iterate through versions ////
                 foreach (ITestable version in testables)
@@ -171,24 +176,23 @@ namespace Testing
                     {
                         JourneyLinkedList calculatedPath = version.CalcualteShortestPath(startStation, endStation);
                         results.Add(calculatedPath);
-                        miniCrashLog.Add("successful");
+                        Console.WriteLine($"Version {version.VersionNumber} execution: successful");
                     }
                     catch (Exception e)
                     {
-                        miniCrashLog.Add($"failed; {e.Message}");
+                        Console.WriteLine($"Version {version.VersionNumber} execution: failed");
+                        Console.WriteLine($"error message: {e.Message}");
                     }
                 }
-                Console.WriteLine($"Finished test: ");
-                // print out log
-                for (int i = 0; i < miniCrashLog.Count(); i++)
-                {
-                    Console.WriteLine($"Version {i + 1} executed: {miniCrashLog[i]}");
-                }
-                Console.WriteLine($"Press any key to return to menu to see print/show results...");
+                Console.WriteLine($"Press any key to see the results:\n");
                 Console.ReadKey();
+                foreach (JourneyLinkedList route in results)
+                {
+                    route.DisplayAll();
+                }
                 return results;
 
-            }   // end of CONSISTENCY test
+            }   // end of CONSISTENCY test function
 
 
             // function to return BENCHMARK result for different paths for each version
@@ -198,107 +202,99 @@ namespace Testing
                 List<ITestable> testables = new List<ITestable>();
 
                 // create an instance of version 1, version 2 and Version 3
-                testables.Add(new Version1());
-                // create an instance of Version 2
+                testables.Add(new Version1(1));
                 //testables.Add(new Version2());
-                // create an instance of Version 3
-                testables.Add(new Version3());
-
-                // create a List for recording if app executed/crashed
-                List<string> miniCrashLog = new List<string>();
+                testables.Add(new Version3(3));
 
                 // create a new result to populate with times
                 BenchmarkResult results = new BenchmarkResult($"{startStation} to {endStation}");
 
                 //// iterate through versions ////
-                int versionNum = 1;
                 foreach (ITestable version in testables)
                 {
+                    // initialise a default time (to catch invalid result)
+                    double averageTime = -1;
+
                     // catch and return any error from running application
                     try
                     {
                         // create new stopwatch
                         Stopwatch timer = new Stopwatch();
 
-                        // start the timer
-                        timer.Start();
-
                         // run the test the requested number of times
                         for (int i = 0; i < testCycles; i++)
                         {
+                            // start the timer
+                            timer.Start();
+
                             // run the version with the start and finish stations
                             version.CalcualteShortestPath(startStation, endStation);
+
+                            // stop the timer
+                            timer.Stop();
+
+                            double progress = 1 + (100 / testCycles) * i;
+                            // display a progress 'bar'
+                            if ((int)(progress) % 5 == 0)
+                            {
+                                Console.Write(".");
+                            }
+
                         }
-
-                        // stop the timer
-                        timer.Stop();
-
 
                         // get the timespan 
                         TimeSpan timeTaken = timer.Elapsed;
 
                         // get a float for the average per cycle
-                        double averageT = timeTaken.TotalMilliseconds / testCycles;
+                        averageTime = timeTaken.TotalMilliseconds / testCycles;
 
-                        Console.WriteLine($"Version {versionNum} finished testing in {timeTaken.TotalMilliseconds / 1000} seconds...");
-                        miniCrashLog.Add("successful");
+                        Console.WriteLine($"Version {version.VersionNumber} execution: successful");
+                        Console.WriteLine($"finished testing in {timeTaken.TotalSeconds} seconds...");
 
                         // add time taken per cycle to dictionary
-                        results.AddTime(versionNum, averageT);
-                        versionNum++;
+                        results.AddTime(version.VersionNumber, averageTime);
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine($"Version {versionNum} failed to execute... ");
-                        versionNum++;
-                        miniCrashLog.Add($"failed; {e.Message}");
-                    }
+                        Console.WriteLine($"Version {version.VersionNumber} execution: failed");
+                        Console.WriteLine($"error message: {e.Message}");
+                        results.AddTime(version.VersionNumber, averageTime);
 
-                }
-                // print out log
-                for (int i = 0; i < miniCrashLog.Count(); i++)
-                {
-                    Console.WriteLine($"Version {i + 1} executed: {miniCrashLog[i]}");
-                }
+                    } // end of try/catch exception
 
-                Console.WriteLine($"Press any key to return to menu to see print/show results...");
+                } // end of iteration through vaersions
+
+                Console.WriteLine($"Press any key to see the results:\n");
                 Console.ReadKey();
+                results.DisplayTimes();
                 return results;
 
-            }   // end of BENCHMARK test
+            }   // end of BENCHMARK test function
 
 
             // function to select a valid station
-            void SelectStation()
+            string SelectStation()
             {
+                string selection;
                 while (true)
                 {
-                    Console.WriteLine("Input start Station:");
-                    startStation = Console.ReadLine();
+                    Console.WriteLine("Input Station:");
+                    string input = Console.ReadLine();
 
-                    if (stations.ContainsKey(startStation))
+                    if (stations.Contains(input))
                     {
+                        selection = input;
                         break;
                     }
                     Console.WriteLine("Invalid Input. Station Not Found.");
                 }
-                while (true)
-                {
-                    Console.WriteLine("Input end Station:");
-                    endStation = Console.ReadLine();
-
-                    if (stations.ContainsKey(endStation))
-                    {
-                        break;
-                    }
-                    Console.WriteLine("Invalid Input. Station Not Found.");
-                }
+                return selection;
             }
 
             // function to input valid number of tests
             void InputNumberOfTests()
             {
-                int input = -1;
+                int input;
                 Console.WriteLine("Please enter an number between 1000 - 1000000: ");
                 if (int.TryParse(Console.ReadLine(), out input) & (input >= 1000 && input <= 1000000))
                 {
@@ -307,9 +303,8 @@ namespace Testing
             }
 
             // function to create Stations Dictionary
-            void PopulateStationsDictionay()
+            void PopulateStationsList()
             {
-
                 // reading csv file and instantiating objects to pass into dictionary
                 using (var reader = new StreamReader("stations3.csv"))
                 {
@@ -317,42 +312,27 @@ namespace Testing
                     {
                         var line = reader.ReadLine();
                         var values = line.Split(',');
+                        // names taken from csv file used to populate adjacency lists of app versions
+                        string stationName = values[1];
 
-                        string lineName = values[0];
-                        string fromName = values[1];
-                        string toName = values[2];
-                        int time = int.Parse(values[3]);
-
-                        Station fromStation, toStation;
-
-                        // Check to make sure we don't get separate stations for (eg. bakerloo oxford st and central oxford st)
-                        if (!stations.ContainsKey(fromName))
+                        if (!stations.Contains(stationName))
                         {
-                            fromStation = new Station(fromName);
-                            stations[fromName] = fromStation;
-                        }
-                        else
-                        {
-                            fromStation = stations[fromName];
+                            stations.Add(stationName);
                         }
 
-                        if (!stations.ContainsKey(toName))
-                        {
-                            toStation = new Station(toName);
-                            stations[toName] = toStation;
-                        }
-                        else
-                        {
-                            toStation = stations[toName];
-                        }
-
-                        // Add the connection between the two stations
-                        fromStation.Neighbours.AddLast((toStation, lineName, time));
-                        toStation.Neighbours.AddLast((fromStation, lineName, time));
                     }
+                }
+            } // end of populate stations
+
+            void PrintStations()
+            {
+                stations.Sort();
+                foreach (var station in stations)
+                {
+                    Console.WriteLine(station);
                 }
             }
 
-        }
+        } // end of MAIN()
     }
 }
