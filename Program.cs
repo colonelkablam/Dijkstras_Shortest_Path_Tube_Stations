@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;  // StopWatch + TimeSpan
 
+
 // Nick Harding w19249722 UoW DSaA Courswork
 // May 2023
 // Testing and benchmarking program
@@ -9,8 +10,19 @@ namespace Testing
     public class Program
     {
         static void Main(string[] args)
-        {
-            /////////////// MEGA-TESTING PROG ///////////////////            
+        {   
+            // Sync console and file writer for logging use of program //
+            // Create a StreamWriter object to write to the log file
+            StreamWriter fileWriter = new StreamWriter("use_log.txt");
+            // Create a synchronized writer for the console
+            TextWriter consoleWriter = TextWriter.Synchronized(Console.Out);
+            // Create a synchronized writer for the file writer
+            TextWriter fileSync = TextWriter.Synchronized(fileWriter);
+            // Redirect the standard output stream to console and the file log
+            Console.SetOut(new WriteToFile(consoleWriter, fileSync));
+
+
+            /////////////// TESTING PROG ///////////////////            
 
             // List to hold all stations names
             List<string> stations = new List<string>();
@@ -66,7 +78,7 @@ namespace Testing
                 Console.WriteLine("9. Clear results");
                 Console.WriteLine("10. Exit");
                 Console.WriteLine();
-                Console.Write("Enter your choice (1-10): ");
+                Console.Write("Enter your choice (1-10): \n");
 
                 // read user selection
                 int selection;
@@ -140,8 +152,7 @@ namespace Testing
                     // PRINT RESULTS TO .TXT FILE
                     case 8:
                         Console.Clear();
-                        //consistencyResults.PrintResultsTable();
-                        //benchmarkingResults.PrintResultsTable();
+                        PrintAllLogs();
                         Console.ReadKey();
                         break;
 
@@ -350,6 +361,43 @@ namespace Testing
                     Console.WriteLine(station);
                 }
             }
+
+            // create log txt files of results
+            void PrintAllLogs()
+            {
+                Console.WriteLine("\nPlease enter a txt file name (no need for '.txt'): ");
+                string input = Console.ReadLine();
+                // strip the puctuation
+                string fileName = PunctStrip.fileName(input);
+                // format the sring
+                string logName = string.Format("{0}_{1:yyyy-MM-dd}.txt", fileName, DateTime.Now);
+
+                // Create a StreamWriter object to write to the log file
+                StreamWriter logWriter = new StreamWriter(logName);
+                // Create a synchronized writer for the file writer
+                TextWriter log = TextWriter.Synchronized(logWriter);
+                // Redirect the standard output stream to console and the file log
+                Console.SetOut(new WriteToFile(log));
+
+                // display logs
+                Console.WriteLine("CONSISTENCY LOG:\n");
+                benchmarkingResults.DisplayResultsTable();
+                Console.WriteLine("BENCHMARKING LOG:\n");
+                consistencyResults.DisplayResultsTable();
+
+                // Close console and file sync //
+                // Restore the standard output stream to the console and use log
+                Console.SetOut(new WriteToFile(fileSync, consoleWriter));
+                // Close the file writer
+                logWriter.Close();
+                Console.WriteLine($"File saved to {logName}, press any key to continue...");
+            }
+
+            // Close console and file sync //
+            // Restore the standard output stream to the console
+            Console.SetOut(consoleWriter);
+            // Close the file writer
+            fileWriter.Close();
 
         } // end of MAIN()
     }
