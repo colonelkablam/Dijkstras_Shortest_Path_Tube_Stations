@@ -38,8 +38,8 @@ namespace Testing
             testables.Add(new Version3(3));
 
             // start and finish default stations
-            string startStation = "Paddington";
-            string endStation = "Edgware Road (Circle Line)";
+            string startStation = "Baker Street";
+            string endStation = "Tower Hill";
 
             // number of tests to run default
             int testCycles = 10000;
