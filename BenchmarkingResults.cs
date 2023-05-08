@@ -12,6 +12,12 @@
             results = new List<BenchmarkResult>();
         }
 
+        // clear tests
+        public void ClearLog()
+        {
+            results.Clear();
+        }
+
         // add a result
         public void AddResult(BenchmarkResult result)
         {

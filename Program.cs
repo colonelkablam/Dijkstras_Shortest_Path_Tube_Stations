@@ -27,15 +27,15 @@ namespace Testing
             testables.Add(new Version3(3));
 
             // start and finish default stations
-            string startStation = "Kings Cross St Pancras";
+            string startStation = "Tower Hill";
             string endStation = "Paddington";
 
             // number of tests to run default
-            int testCycles = 1000;
+            int testCycles = 10000;
 
+            // create results storage objects
             BenchmarkingResults benchmarkingResults = new BenchmarkingResults();
             ConsistencyResults consistencyResults = new ConsistencyResults();
-            int consistencyTestNum = 1;
 
             // start the menu
             bool exit = false;
@@ -97,14 +97,14 @@ namespace Testing
                     // CONSISTANCY TEST
                     case 4:
                         Console.Clear();
-                        Console.WriteLine("/////////////////////////////\n");
-                        Console.WriteLine("Running Consistency tests...\n");
-                        Console.WriteLine("/////////////////////////////\n");
+                        Console.WriteLine("/////////////////////////////");
+                        Console.WriteLine("Running Consistency tests...");
+                        Console.WriteLine("/////////////////////////////");
 
                         // runs a consistencey test testult
                         List<JourneyLinkedList> result = RunConsistencyTest(startStation, endStation);
                         // add it to main results
-                        consistencyResults.AddRoutes(consistencyTestNum++, result, $"{startStation} - {endStation}");
+                        consistencyResults.AddRoutes(consistencyResults.GetNumTests() + 1, result, $"{startStation} - {endStation}");
                         
                         Console.WriteLine($"\nPress any key to return to the main menu...");
                         Console.ReadKey();
@@ -121,9 +121,9 @@ namespace Testing
                     // BENCHMARKING TEST
                     case 6:
                         Console.Clear();
-                        Console.WriteLine("/////////////////////////////\n");
-                        Console.WriteLine("Running Benchmarking tests...\n");
-                        Console.WriteLine("/////////////////////////////\n");
+                        Console.WriteLine("/////////////////////////////");
+                        Console.WriteLine("Running Benchmarking tests...");
+                        Console.WriteLine("/////////////////////////////");
 
                         // returns a BenchmarkResult object array
                         benchmarkingResults.AddResult(RunBenchmarkTest(startStation, endStation, testCycles));
@@ -150,9 +150,8 @@ namespace Testing
 
                     // CLEAR RESULTS
                     case 9:
-                        benchmarkingResults = new BenchmarkingResults();
-                        consistencyResults = new ConsistencyResults();
-                        consistencyTestNum = 0;
+                        benchmarkingResults.ClearLog();
+                        consistencyResults.ClearLog();
                         Console.Clear();
                         Console.WriteLine("Results logs cleared, press any key to return to main menu...");
                         Console.ReadKey();
@@ -187,6 +186,7 @@ namespace Testing
                     {
                         JourneyLinkedList calculatedPath = version.CalcualteShortestPath(startStation, endStation);
                         results.Add(calculatedPath);
+                        Console.WriteLine();
                         Console.WriteLine($"Version {version.VersionNumber} execution: successful");
                     }
                     catch (Exception e)
@@ -215,6 +215,8 @@ namespace Testing
             {
                 // create a new result to populate with times
                 BenchmarkResult results = new BenchmarkResult($"{startStation} to {endStation}", cycles);
+
+                Console.WriteLine($"Number of cycles - {cycles}\n");
 
                 //// iterate through versions ////
                 foreach (ITestable version in testables)
@@ -255,7 +257,7 @@ namespace Testing
 
                         Console.WriteLine();
                         Console.WriteLine($"\nVersion {version.VersionNumber} execution: successful");
-                        Console.WriteLine($"finished testing in {timeTaken.TotalSeconds.ToString("F2")} seconds...");
+                        Console.WriteLine($"finished executing in {timeTaken.TotalSeconds.ToString("F2")} seconds...");
 
                         // add time taken per cycle to dictionary
                         results.AddTime(version.VersionNumber, averageTime);

@@ -34,7 +34,6 @@
             {
                 Console.WriteLine($"Version {time.Key}: average time taken per cycle: {time.Value.ToString("F2")} ms");
             }
-            Console.WriteLine();
         }
 
     }

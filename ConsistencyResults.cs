@@ -15,7 +15,14 @@
             testRoute = new List<string>();
         }
 
-        // get number of test run
+        // clear tests
+        public void ClearLog()
+        {
+            routesTaken.Clear();
+            testRoute.Clear();
+        }
+
+        // get number of test in dict
         public int GetNumTests()
         {
             return testRoute.Count;
@@ -28,7 +35,7 @@
             testRoute.Add(routeString);
         }
 
-        // Get route 
+        // disply route 
         public void DisplayResultsTable()
         {
             if (routesTaken.Count == 0)
