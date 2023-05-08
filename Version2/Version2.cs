@@ -12,7 +12,7 @@ namespace Testing
         //// ITestable name added ////
         public int VersionNumber { get; }
 
-        private int numVertices = 63;
+        private int numVertices = 64;
         WeightedEdge[] adjacencyList;
         WeightedEdge[] edges;
         private int[] distTo;
@@ -53,10 +53,11 @@ namespace Testing
             adjacencyList[2].Next = baker;
             WeightedEdge baker2 = new WeightedEdge("Baker Street", "Regents Park", 10, "Bakerloo", null);
             baker.Next = baker2;
-            WeightedEdge baker3 = new WeightedEdge("Baker Street", "Edgware Road", 10, "Hammersmith & City", null);
+            WeightedEdge baker3 = new WeightedEdge("Baker Street", "Edgware Road (Circle Line)", 10, "Hammersmith & City", null);
             baker2.Next = baker3;
-            WeightedEdge baker4 = new WeightedEdge("Baker Street", "Great Portland Street", 13, "Barbican", null);
+            WeightedEdge baker4 = new WeightedEdge("Baker Street", "Great Portland Street", 13, "Metropolitan", null);
             baker3.Next = baker4;
+
             adjacencyList[3] = new WeightedEdge("Bank", "Liverpool Street", 10, "Central", null);
             WeightedEdge bank = new WeightedEdge("Bank", "Moorgate", 9, "Northern", null);
             adjacencyList[3].Next = bank;
@@ -102,11 +103,15 @@ namespace Testing
             adjacencyList[13] = new WeightedEdge("Earls Court", "Gloucester Road", 12, "District", null);
             WeightedEdge earlscourt = new WeightedEdge("Earls Court", "High Street Kensington", 18, "District", null);
             adjacencyList[13].Next = earlscourt;
-            adjacencyList[14] = new WeightedEdge("Edgware Road", "Paddington", 10, "Bakerloo", null);
-            WeightedEdge edgwareroad = new WeightedEdge("Edgware Road", "Baker Street", 10, "Hammersmith & City", null);
+
+            adjacencyList[14] = new WeightedEdge("Edgware Road (Bakerloo Line)", "Paddington", 11, "Bakerloo", null);           // added an extra vertex for Edgware Rd (Circle line)
+            WeightedEdge edgwareroad = new WeightedEdge("Edgware Road (Bakerloo Line)", "Marylebone", 7, "Bakerloo", null);     // 
             adjacencyList[14].Next = edgwareroad;
-            WeightedEdge edgwareroad2 = new WeightedEdge("Edgware Road", "Marylebone", 7, "Bakerloo", null);
-            edgwareroad.Next = edgwareroad2;
+
+            adjacencyList[63] = new WeightedEdge("Edgware Road (Circle Line)", "Baker Street", 10, "Hammersmith & City", null); // 
+            WeightedEdge edgwareroad2 = new WeightedEdge("Edgware Road (Circle Line)", "Paddington", 10, "District", null);     // 
+            adjacencyList[63].Next = edgwareroad2;
+
             adjacencyList[15] = new WeightedEdge("Elephant & Castle", "Lambeth North", 18, "Bakerloo", null);
             WeightedEdge elephantcastle = new WeightedEdge("Elephant & Castle", "Borough", 13, "Northern", null);
             adjacencyList[15].Next = elephantcastle;
@@ -202,7 +207,7 @@ namespace Testing
             adjacencyList[35] = new WeightedEdge("Marble Arch", "Bond Street", 7, "Central", null);
             WeightedEdge marblearch = new WeightedEdge("Marble Arch", "Lancaster Gate", 15, "Central", null);
             adjacencyList[35].Next = marblearch;
-            adjacencyList[36] = new WeightedEdge("Marylebone", "Edgware Road", 7, "Bakerloo", null);
+            adjacencyList[36] = new WeightedEdge("Marylebone", "Edgware Road (Bakerloo Line)", 7, "Bakerloo", null); // (Bakerloo Line) added
             WeightedEdge marylebone = new WeightedEdge("Marylebone", "Baker Street", 6, "Bakerloo", null);
             adjacencyList[36].Next = marylebone;
             adjacencyList[37] = new WeightedEdge("Monument", "Tower Hill", 10, "District", null);
@@ -236,9 +241,14 @@ namespace Testing
             oxfordcircus3.Next = oxfordcircus4;
             WeightedEdge oxfordcircus5 = new WeightedEdge("Oxford Circus", "Warren Street", 18, "Victoria", null);
             oxfordcircus4.Next = oxfordcircus5;
+
             adjacencyList[42] = new WeightedEdge("Paddington", "Bayswater", 17, "District", null);
-            WeightedEdge paddington = new WeightedEdge("Paddington", "Edware Road", 10, "District", null);
+            WeightedEdge paddington = new WeightedEdge("Paddington", "Edgware Road (Circle Line)", 10, "Hammersmith & City", null); /// 
             adjacencyList[42].Next = paddington;
+            WeightedEdge paddington2 = new WeightedEdge("Paddington", "Edgware Road (Bakerloo Line)", 11, "Bakerloo", null); 
+            adjacencyList[42].Next = paddington2;
+
+
             adjacencyList[43] = new WeightedEdge("Piccadilly Circus", "Oxford Circus", 12, "Bakerloo", null);
             WeightedEdge piccadillycircus = new WeightedEdge("Piccadilly Circus", "Green Park", 8, "Piccadilly", null);
             adjacencyList[43].Next = piccadillycircus;

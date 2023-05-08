@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics;  // StopWatch + TimeSpan
 
-
-// Nick Harding w19249722 UoW DSaA Courswork
 // May 2023
-// Testing and benchmarking program
+// Nick Harding w19249722 UoW DSaA Courswork 7SENG010W_CW
+// Testing and benchmarking program for three different versions of Dijkstra's Shortest Path Algo
 
 namespace Testing
 {
@@ -22,7 +21,7 @@ namespace Testing
             Console.SetOut(new WriteToFile(consoleWriter, fileSync));
 
 
-            /////////////// TESTING PROG ///////////////////            
+                            /////////////// MAIN TESTING PROG ///////////////////            
 
             // List to hold all stations names
             List<string> stations = new List<string>();
@@ -39,8 +38,8 @@ namespace Testing
             testables.Add(new Version3(3));
 
             // start and finish default stations
-            string startStation = "Tower Hill";
-            string endStation = "Paddington";
+            string startStation = "Paddington";
+            string endStation = "Edgware Road (Circle Line)";
 
             // number of tests to run default
             int testCycles = 10000;
