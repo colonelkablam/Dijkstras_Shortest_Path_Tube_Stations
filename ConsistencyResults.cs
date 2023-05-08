@@ -15,6 +15,12 @@
             testRoute = new List<string>();
         }
 
+        // get number of test run
+        public int GetNumTests()
+        {
+            return testRoute.Count;
+        }
+
         // Add route
         public void AddRoutes(int v, List<JourneyLinkedList> route, string routeString)
         {
@@ -25,7 +31,7 @@
         // Get route 
         public void DisplayResultsTable()
         {
-            if (routesTaken.Count() == 0)
+            if (routesTaken.Count == 0)
             {
                 Console.WriteLine($"               - no results -");
             }
@@ -33,15 +39,19 @@
             for (int i = 1; i <= routesTaken.Count(); i++)
             {
                 Console.WriteLine($"======================================================");
-                Console.WriteLine($" Test Number {i}:  {testRoute[i - 1]}");
+                Console.WriteLine($"              *** Test Number {i} ***");
                 Console.WriteLine($"======================================================");
+                Console.WriteLine($"Route: {testRoute[i - 1]}");
+
 
                 // interate through the different versions
-                for (int j = 0; j < routesTaken[i].Count(); j++)
+                for (int j = 0; j < routesTaken[i].Count; j++)
                 {
                     // display version being displayed
                     routesTaken[i][j].DisplayAll();
                 }
+                Console.WriteLine($"     =========    end of test {i}     ==========\n");
+
             }
 
         }

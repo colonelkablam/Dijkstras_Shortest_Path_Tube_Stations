@@ -47,7 +47,7 @@
         {   
             // print out route to console
             Console.WriteLine();
-            Console.WriteLine($"Version {version}: calculated shortest route is a {walkTime} min walk");
+            Console.WriteLine($"Version {version}: calculated shortest route - {walkTime} min walk");
             Console.WriteLine($"------------------------------------------------------");
 
             // if empty a default journey added

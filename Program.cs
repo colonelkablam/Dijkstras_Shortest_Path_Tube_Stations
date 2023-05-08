@@ -56,10 +56,10 @@ namespace Testing
                 Console.WriteLine("3. Change number of test cycles");
                 Console.WriteLine();
                 Console.WriteLine("4. Run a CONSISTENCY test");
-                Console.WriteLine("5.   - Display ALL results");
+               Console.WriteLine($"5.   - Display results log ({consistencyResults.GetNumTests()})");
                 Console.WriteLine();
                 Console.WriteLine("6. Run a BENCHMARKING test");
-                Console.WriteLine("7.   - Display ALL results");
+               Console.WriteLine($"7.   - Display results log ({benchmarkingResults.GetNumTests()})");
                 Console.WriteLine();
                 Console.WriteLine("8. Print results tables to txt file");
                 Console.WriteLine("9. Clear results");
@@ -97,9 +97,9 @@ namespace Testing
                     // CONSISTANCY TEST
                     case 4:
                         Console.Clear();
-                        Console.WriteLine("////////////////////////////\n");
-                        Console.WriteLine("Running Consistency test...\n");
-                        Console.WriteLine("////////////////////////////\n");
+                        Console.WriteLine("/////////////////////////////\n");
+                        Console.WriteLine("Running Consistency tests...\n");
+                        Console.WriteLine("/////////////////////////////\n");
 
                         // runs a consistencey test testult
                         List<JourneyLinkedList> result = RunConsistencyTest(startStation, endStation);
@@ -121,9 +121,9 @@ namespace Testing
                     // BENCHMARKING TEST
                     case 6:
                         Console.Clear();
-                        Console.WriteLine("////////////////////////////\n");
-                        Console.WriteLine("Running Benchmarking test...\n");
-                        Console.WriteLine("////////////////////////////\n");
+                        Console.WriteLine("/////////////////////////////\n");
+                        Console.WriteLine("Running Benchmarking tests...\n");
+                        Console.WriteLine("/////////////////////////////\n");
 
                         // returns a BenchmarkResult object array
                         benchmarkingResults.AddResult(RunBenchmarkTest(startStation, endStation, testCycles));
@@ -154,7 +154,7 @@ namespace Testing
                         consistencyResults = new ConsistencyResults();
                         consistencyTestNum = 0;
                         Console.Clear();
-                        Console.WriteLine("Results tables cleared, press any key to return to main menu...");
+                        Console.WriteLine("Results logs cleared, press any key to return to main menu...");
                         Console.ReadKey();
                         break;
 
@@ -211,10 +211,10 @@ namespace Testing
 
 
             // function to return BENCHMARK result for different paths for each version
-            BenchmarkResult RunBenchmarkTest(string startStation, string endStation, int testCycles)
+            BenchmarkResult RunBenchmarkTest(string startStation, string endStation, int cycles)
             {
                 // create a new result to populate with times
-                BenchmarkResult results = new BenchmarkResult($"{startStation} to {endStation}");
+                BenchmarkResult results = new BenchmarkResult($"{startStation} to {endStation}", cycles);
 
                 //// iterate through versions ////
                 foreach (ITestable version in testables)
