@@ -14,7 +14,7 @@ namespace Adjacency
 
         }
 
-        int numVertices = 63;
+        int numVertices = 64;
 
         public JourneyLinkedList DijkstraMethod(string source, string destination, WeightedEdge[] adjacencyList, WeightedEdge[] edges, int[] distTo, int versionNumber)
         {
