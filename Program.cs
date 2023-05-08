@@ -44,16 +44,17 @@ namespace Testing
             while (exit == false)
             {
                 Console.Clear();
-                Console.WriteLine("******************************************************************");
-                Console.WriteLine("Testing 3 Different Implementations of Dijkstra's Search Algorithm");
-                Console.WriteLine("            - CONSISTENCY check and BENCHMARKING -");
-                Console.WriteLine("******************************************************************");
+                Console.WriteLine("******************************************************");
+                Console.WriteLine("         Testing Different Implementations of");
+                Console.WriteLine("      >>  Dijkstra's Shortest Path Algorithm  <<");
+                Console.WriteLine("          CONSISTENCY check and BENCHMARKING");
+                Console.WriteLine("******************************************************");
                 Console.WriteLine();
                 Console.WriteLine("Please select an option:");
-                Console.WriteLine();
-                Console.WriteLine("1. Change the START station");
-                Console.WriteLine("2. Change the END station");
-                Console.WriteLine("3. Change number of test cycles");
+                Console.WriteLine("                                     current:");
+               Console.WriteLine($"1. Change the START station        > {startStation}");
+               Console.WriteLine($"2. Change the END station          > {endStation}");
+               Console.WriteLine($"3. Change number of test cycles    > {testCycles}");
                 Console.WriteLine();
                 Console.WriteLine("4. Run a CONSISTENCY test");
                Console.WriteLine($"5.   - Display results log ({consistencyResults.GetNumTests()})");
@@ -64,10 +65,6 @@ namespace Testing
                 Console.WriteLine("8. Print results tables to txt file");
                 Console.WriteLine("9. Clear results");
                 Console.WriteLine("10. Exit");
-                Console.WriteLine();
-                Console.WriteLine($"Current Settings:");
-                Console.WriteLine($"  start:\t{startStation}\n  end:\t\t{endStation}");
-                Console.WriteLine($"  test cycles:\t{testCycles}");
                 Console.WriteLine();
                 Console.Write("Enter your choice (1-10): ");
 
@@ -97,9 +94,9 @@ namespace Testing
                     // CONSISTANCY TEST
                     case 4:
                         Console.Clear();
-                        Console.WriteLine("/////////////////////////////");
-                        Console.WriteLine("Running Consistency tests...");
-                        Console.WriteLine("/////////////////////////////");
+                        Console.WriteLine("////////////////////////////");
+                        Console.WriteLine("Running Consistency Test...");
+                        Console.WriteLine("////////////////////////////");
 
                         // runs a consistencey test testult
                         List<JourneyLinkedList> result = RunConsistencyTest(startStation, endStation);
@@ -121,9 +118,9 @@ namespace Testing
                     // BENCHMARKING TEST
                     case 6:
                         Console.Clear();
-                        Console.WriteLine("/////////////////////////////");
-                        Console.WriteLine("Running Benchmarking tests...");
-                        Console.WriteLine("/////////////////////////////");
+                        Console.WriteLine("////////////////////////////");
+                        Console.WriteLine("Running Benchmarking Test...");
+                        Console.WriteLine("////////////////////////////");
 
                         // returns a BenchmarkResult object array
                         benchmarkingResults.AddResult(RunBenchmarkTest(startStation, endStation, testCycles));
@@ -246,7 +243,7 @@ namespace Testing
 
                             // calculate and display progress
                             progress = (1 / (double)testCycles) * (i+1);
-                            Console.Write($"\rProgress: {progress.ToString("P2")}   ");
+                            Console.Write($"\rProgress: {progress.ToString("P2")}");
                         }
 
                         // get the timespan 
