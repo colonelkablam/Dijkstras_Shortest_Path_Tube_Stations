@@ -49,8 +49,7 @@
                 queue.Add(station);
             }
 
-            // total O of N^3 as N * N * N^3
-            while (queue.Count > 0) // O of N as could have all stations in the queue
+            while (queue.Count > 0) 
 
             {
                 // sorting the queue big O of ? OrderBy() - uses Quicksort O(N*logN) average O(N2)
@@ -63,7 +62,6 @@
                 }
 
 
-                // O of 1
                 queue.Remove(currentStation);
 
                 // O of N as need to go through each neighbour (could be every station is neighbour?)
@@ -86,7 +84,7 @@
             /////// testing - create JourneyLinkedList for data collection
             JourneyLinkedList route = new JourneyLinkedList(VersionNumber);
 
-            // big O of N
+            // big O of N - worst case go through all verticies
             while (current != null)
             {
                 path.AddFirst(current);
@@ -102,6 +100,7 @@
             var currentLine = "";
             var totalTime = 0;
 
+            // N
             foreach (var station in path)
             {
                 if (previousStation != null)
