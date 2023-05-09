@@ -33,7 +33,6 @@
             var previous = new Dictionary<Station, Station>();
             var queue = new List<Station>();
 
-            // O of N as going through each element
             // initialising distances list
             foreach (var station in stations.Values)
             {
@@ -52,10 +51,8 @@
             while (queue.Count > 0) 
 
             {
-                // sorting the queue big O of ? OrderBy() - uses Quicksort O(N*logN) average O(N2)
                 var currentStation = queue.OrderBy(station => distances[station]).First();
 
-                // is this needed?
                 if (currentStation == endStation)
                 {
                     break;
@@ -64,7 +61,6 @@
 
                 queue.Remove(currentStation);
 
-                // O of N as need to go through each neighbour (could be every station is neighbour?)
                 foreach (var neighbour in currentStation.Neighbours)
                 {
                     var alternativeDistance = distances[currentStation] + neighbour.Item3;
@@ -84,7 +80,6 @@
             /////// testing - create JourneyLinkedList for data collection
             JourneyLinkedList route = new JourneyLinkedList(VersionNumber);
 
-            // big O of N - worst case go through all verticies
             while (current != null)
             {
                 path.AddFirst(current);
