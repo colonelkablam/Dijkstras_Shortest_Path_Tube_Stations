@@ -37,6 +37,9 @@ namespace Testing
             testables.Add(new Version2(2));
             testables.Add(new Version3(3));
 
+            // new version to be tested
+            testables.Add(new Version4(4));
+
             // start and finish default stations
             string startStation = "Baker Street";
             string endStation = "Tower Hill";
