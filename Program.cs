@@ -41,7 +41,7 @@ namespace Testing
             testables.Add(new Version4(4));
 
             // start and finish default stations
-            string startStation = "Baker Street";
+            string startStation = "Holborn";
             string endStation = "Tower Hill";
 
             // number of tests to run default

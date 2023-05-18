@@ -95,8 +95,10 @@ namespace Testing
 
                 for (Node node = endNode; node != null; node = data[node].Previous)
                 {
+                    Node node2 = data[node].Previous;
+
                     // route.AddJourney(new Journey(node.Station.GetStationName() , data[node].Previous.Station.GetStationName(), 10));
-                    route.AddJourney(new Journey(data[node].Previous.Station.GetStationName(), node.Station.GetStationName(), data[node].Distance));
+                    route.AddJourney(new Journey(node.Station.GetStationName(), node2.Station.GetStationName(), data[node].Distance));
 
 
                 }
